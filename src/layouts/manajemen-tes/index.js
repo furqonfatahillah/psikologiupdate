@@ -148,7 +148,6 @@ function ManajemenTes() {
   // Data states
   const [listJenisTes, setListJenisTes] = useState([]);
   const [listKategoriTes, setListKategoriTes] = useState([]);
-  const [kategoriData, setKategoriData] = useState([]);
   const [soalData, setSoalData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingData, setLoadingData] = useState(false);
@@ -227,64 +226,57 @@ function ManajemenTes() {
   }, []);
 
   // Fetch kategori data
-  const fetchKategoriData = async () => {
-    const token = sessionStorage.getItem("token");
-    if (!token) return;
+  useEffect(() => {
+    const fetchKategoriTes = async () => {
+      const token = sessionStorage.getItem("token");
+      if (!token) return;
 
-    setLoadingData(true);
-    try {
-      const response = await axios.get(`${BASE_URL}/kategori-tes`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      setLoadingData(true);
+      try {
+        const response = await axios.get(`${BASE_URL}/kategori-tes`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
-      if (response.data.status === "success") {
-        setKategoriData(response.data.data);
-        setListKategoriTes(response.data.data);
-      }
-    } catch (error) {
-      console.error("Gagal mengambil data kategori tes:", error);
-      // Set sample data if API fails
-      const sampleData = [
-        {
-          id: 1,
-          nama_kategori_tes: "TES PSIKOLOGI CALON PEMEGANG SENJATA API ORGANIK POLRI",
-          masterJenisTes: {
-            id: 1,
-            nama_jenis_tes: "PILIHAN GANDA"
-          },
-          waktu_pengerjaan: "02:00:00"
+        if (response.data.status === "success") {
+          setListKategoriTes(response.data.data);
         }
-      ];
-      setKategoriData(sampleData);
-      setListKategoriTes(sampleData);
-    } finally {
-      setLoadingData(false);
-    }
-  };
+      } catch (error) {
+        console.error("Gagal mengambil data kategori tes:", error);
+        Swal.fire(
+          "Gagal!",
+          `Gagal mengambil data kategori tes: ${error.response?.data?.message || "Terjadi kesalahan"}`,
+          "error"
+        );
+      } finally {
+        setLoadingData(false);
+      }
+    };
+
+    fetchKategoriTes();
+  }, [tableKey]);
 
   // Fetch soal data
-  const fetchSoalData = async () => {
-    const token = sessionStorage.getItem("token");
-    if (!token) return;
-
-    setLoadingData(true);
-    try {
-      const response = await axios.get(`${BASE_URL}/soal`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (response.data.status === "success") {
-        setSoalData(response.data.data);
-      }
-    } catch (error) {
-      console.error("Gagal mengambil data soal:", error);
-    } finally {
-      setLoadingData(false);
-    }
-  };
-
   useEffect(() => {
-    fetchKategoriData();
+    const fetchSoalData = async () => {
+      const token = sessionStorage.getItem("token");
+      if (!token) return;
+
+      setLoadingData(true);
+      try {
+        const response = await axios.get(`${BASE_URL}/soal`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (response.data.status === "success") {
+          setSoalData(response.data.data);
+        }
+      } catch (error) {
+        console.error("Gagal mengambil data soal:", error);
+      } finally {
+        setLoadingData(false);
+      }
+    };
+
     fetchSoalData();
   }, [tableKey]);
 
@@ -612,19 +604,7 @@ function ManajemenTes() {
   };
 
   const getKategoriRows = () => {
-    const displayData = kategoriData.length > 0 ? kategoriData : [
-      {
-        id: 1,
-        nama_kategori_tes: "TES PSIKOLOGI CALON PEMEGANG SENJATA API ORGANIK POLRI",
-        masterJenisTes: {
-          id: 1,
-          nama_jenis_tes: "PILIHAN GANDA"
-        },
-        waktu_pengerjaan: "02:00:00"
-      }
-    ];
-
-    return displayData.map((item, index) => ({
+    return listKategoriTes.map((item, index) => ({
       no: index + 1,
       kategori: item.nama_kategori_tes,
       jenis: item.masterJenisTes?.nama_jenis_tes || '-',
@@ -644,17 +624,32 @@ function ManajemenTes() {
   };
 
   const getSoalRows = () => {
-    return soalData.map((item, index) => ({
-      no: index + 1,
-      soal: item.teks_soal || (item.gambar_soal ? "[Gambar Soal]" : '-'),
-      kategori: item.kategoriTes?.nama_kategori_tes || '-',
-      aksi: (
-        <ActionButtons
-          onEdit={() => handleEditClick(item.id)}
-          onDelete={() => handleDelete(item.id, "soal")}
-        />
-      ),
-    }));
+    return soalData.map((item, index) => {
+      let soalContent = '-';
+      if (item.teks_soal) {
+        soalContent = item.teks_soal;
+      } else if (item.gambar_soal) {
+        soalContent = (
+          <img
+            src={`${BASE_URL_NO_API}/${item.gambar_soal}`}
+            alt="Soal"
+            style={{ maxWidth: '100px', maxHeight: '100px' }}
+          />
+        );
+      }
+
+      return {
+        no: index + 1,
+        soal: soalContent,
+        kategori: item.kategoriTes?.nama_kategori_tes || '-',
+        aksi: (
+          <ActionButtons
+            onEdit={() => handleEditClick(item.id)}
+            onDelete={() => handleDelete(item.id, "soal")}
+          />
+        ),
+      };
+    });
   };
 
   return (
@@ -669,9 +664,9 @@ function ManajemenTes() {
               </SoftTypography>
             </SoftBox>
 
-            <Box sx={{ borderBottom: 1, borderColor: 'divider', px: 3 }}>
-              <Tabs 
-                value={activeTab} 
+            <Box sx={{ borderBottom: 1, borderColor: 'divider', px: 3, bgcolor: 'white' }}>
+              <Tabs
+                value={activeTab}
                 onChange={handleChange}
                 sx={{
                   '& .MuiTab-root': {
@@ -680,12 +675,13 @@ function ManajemenTes() {
                     textTransform: 'none',
                     minWidth: 'auto',
                     px: 3,
+                    color: 'rgba(0, 0, 0, 0.6)',
                   },
                   '& .Mui-selected': {
                     color: '#ffffff'
                   },
                   '& .MuiTabs-indicator': {
-                    backgroundColor: '#ffffff'
+                    backgroundColor: '#fafafa'
                   }
                 }}
               >
@@ -728,16 +724,16 @@ function ManajemenTes() {
               <Modal
                 open={openModalKategori}
                 onClose={handleCloseModalKategori}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
+                aria-labelledby="modal-kategori-title"
+                aria-describedby="modal-kategori-description"
               >
                 <Box sx={style}>
-                  <Typography 
-                    id="modal-modal-title" 
-                    variant="h6" 
-                    component="h2" 
+                  <Typography
+                    id="modal-kategori-title"
+                    variant="h6"
+                    component="h2"
                     gutterBottom
-                    sx={{ 
+                    sx={{
                       fontWeight: 600,
                       borderBottom: '1px solid #e0e0e0',
                       pb: 2,
@@ -751,35 +747,47 @@ function ManajemenTes() {
                       fullWidth
                       label="Nama Kategori"
                       variant="outlined"
-                      size="small"
+                      size="medium"
                       value={namaKategori}
                       onChange={(e) => setNamaKategori(e.target.value.toUpperCase())}
                       required
-                      sx={{ mb: 2 }}
+                      sx={{
+                        mb: 2,
+                        '& .MuiInputLabel-root': { fontSize: '0.875rem' },
+                        '& .MuiOutlinedInput-input': { fontSize: '0.875rem' }
+                      }}
                     />
 
-                    <FormControl fullWidth size="small" sx={{ mb: 2 }}>
-                      <InputLabel>Jenis Tes</InputLabel>
-                      <Select
+                    <FormControl fullWidth size="medium" sx={{ mb: 2 }}>
+                      <select
                         value={masterJenisTesId}
                         onChange={(e) => setMasterJenisTesId(e.target.value)}
-                        label="Jenis Tes"
                         required
+                        style={{
+                          width: '100%',
+                          padding: '8.5px 14px',
+                          fontSize: '0.875rem',
+                          fontFamily: 'inherit',
+                          border: '1px solid #ced4da',
+                          borderRadius: '4px',
+                          backgroundColor: '#fff',
+                          outline: 'none',
+                        }}
                       >
-                        <MenuItem value="">Pilih Jenis Tes</MenuItem>
+                        <option value="">Pilih Jenis Tes</option>
                         {listJenisTes.map((jenis) => (
-                          <MenuItem key={jenis.id} value={jenis.id}>
+                          <option key={jenis.id} value={jenis.id}>
                             {jenis.nama_jenis_tes}
-                          </MenuItem>
+                          </option>
                         ))}
-                      </Select>
+                      </select>
                     </FormControl>
 
                     <TextField
                       fullWidth
                       label="Waktu Pengerjaan (HH:MM:SS)"
                       variant="outlined"
-                      size="small"
+                      size="medium"
                       value={waktuPengerjaan}
                       onChange={(e) => {
                         let value = e.target.value;
@@ -787,11 +795,15 @@ function ManajemenTes() {
                         if (value.length <= 8) setWaktuPengerjaan(value);
                       }}
                       required
-                      sx={{ mb: 2 }}
+                      sx={{
+                        mb: 2,
+                        '& .MuiInputLabel-root': { fontSize: '0.875rem' },
+                        '& .MuiOutlinedInput-input': { fontSize: '0.875rem' }
+                      }}
                     />
 
                     <Box sx={{ mb: 3 }}>
-                      <Typography variant="body2" gutterBottom>
+                      <Typography variant="body2" gutterBottom sx={{ fontSize: '0.875rem' }}>
                         Instruksi Tes
                       </Typography>
                       <SimpleEditor
@@ -801,9 +813,14 @@ function ManajemenTes() {
                     </Box>
 
                     <Box display="flex" justifyContent="flex-end" gap={2}>
-                      <Button 
-                        variant="outlined" 
+                      <Button
+                        variant="outlined"
                         onClick={handleCloseModalKategori}
+                        size="small"
+                        sx={{
+                          fontSize: '0.875rem',
+                          color: 'rgba(0, 0, 0, 0.87)'
+                        }}
                       >
                         Batal
                       </Button>
@@ -811,9 +828,15 @@ function ManajemenTes() {
                         variant="contained"
                         type="submit"
                         disabled={loading}
-                        sx={{ backgroundColor: '#cb0c9f', '&:hover': { backgroundColor: '#b00b8a' } }}
+                        size="small"
+                        sx={{
+                          fontSize: '0.875rem',
+                          backgroundColor: '#cb0c9f',
+                          '&:hover': { backgroundColor: '#b00b8a' },
+                          color: '#ffffff' // Warna putih dalam hex
+                        }}
                       >
-                        {loading ? <CircularProgress size={24} /> : "Simpan"}
+                        {loading ? <CircularProgress size={20} sx={{ color: '#ffffff' }} /> : "Simpan"}
                       </Button>
                     </Box>
                   </form>
@@ -859,12 +882,12 @@ function ManajemenTes() {
                 aria-describedby="modal-soal-description"
               >
                 <Box sx={{ ...style, width: 700 }}>
-                  <Typography 
-                    id="modal-soal-title" 
-                    variant="h6" 
-                    component="h2" 
+                  <Typography
+                    id="modal-soal-title"
+                    variant="h6"
+                    component="h2"
                     gutterBottom
-                    sx={{ 
+                    sx={{
                       fontWeight: 600,
                       borderBottom: '1px solid #e0e0e0',
                       pb: 2,
@@ -874,22 +897,30 @@ function ManajemenTes() {
                     {editMode ? "EDIT SOAL" : "TAMBAH SOAL"}
                   </Typography>
                   <form onSubmit={editMode ? handleEditSoal : handleTambahSoal}>
-                    <FormControl fullWidth size="small" sx={{ mb: 2 }}>
-                      <InputLabel>Kategori Soal</InputLabel>
-                      <Select
+                    <Box sx={{ mb: 2 }}>
+                      <select
                         value={kategoriTesId}
                         onChange={(e) => setKategoriTesId(e.target.value)}
-                        label="Kategori Soal"
                         required
+                        style={{
+                          width: '100%',
+                          padding: '8.5px 14px',
+                          fontSize: '0.875rem',
+                          fontFamily: 'inherit',
+                          border: '1px solid #ced4da',
+                          borderRadius: '4px',
+                          backgroundColor: '#fff',
+                          outline: 'none',
+                        }}
                       >
-                        <MenuItem value="">Pilih Kategori Soal</MenuItem>
+                        <option value="">Pilih Kategori Soal</option>
                         {listKategoriTes.map((kategori) => (
-                          <MenuItem key={kategori.id} value={kategori.id}>
+                          <option key={kategori.id} value={kategori.id}>
                             {kategori.nama_kategori_tes}
-                          </MenuItem>
+                          </option>
                         ))}
-                      </Select>
-                    </FormControl>
+                      </select>
+                    </Box>
 
                     <TextField
                       fullWidth
@@ -900,24 +931,35 @@ function ManajemenTes() {
                       rows={3}
                       value={teksSoal}
                       onChange={(e) => setTeksSoal(e.target.value)}
-                      sx={{ mb: 2 }}
+                      required
+                      sx={{
+                        mb: 2,
+                        '& .MuiInputLabel-root': { fontSize: '0.875rem' },
+                        '& .MuiOutlinedInput-input': { fontSize: '0.875rem' }
+                      }}
                     />
 
                     <Box sx={{ mb: 2 }}>
-                      <Typography variant="body2" gutterBottom>
+                      <Typography variant="body2" gutterBottom sx={{ fontSize: '0.875rem', mb: 1 }}>
                         Gambar Soal (Opsional)
                       </Typography>
                       <input
                         type="file"
                         accept="image/*"
                         onChange={(e) => setGambarSoal(e.target.files[0])}
-                        style={{ width: '100%' }}
+                        style={{
+                          width: '100%',
+                          padding: '8px',
+                          border: '1px solid #ced4da',
+                          borderRadius: '4px',
+                          fontSize: '0.875rem'
+                        }}
                       />
                     </Box>
 
                     {isPilihanGanda() && (
                       <Box sx={{ mb: 3 }}>
-                        <Typography variant="body2" fontWeight="medium" mb={2}>
+                        <Typography variant="body2" fontWeight="medium" mb={2} sx={{ fontSize: '0.875rem' }}>
                           Opsi Jawaban:
                         </Typography>
                         {pilihanJawaban.map((pilihan, index) => (
@@ -933,11 +975,12 @@ function ManajemenTes() {
                             }}
                           >
                             <Box display="flex" alignItems="center" gap={1} mb={1}>
-                              <Typography 
-                                variant="body2" 
-                                sx={{ 
-                                  minWidth: '24px', 
-                                  fontWeight: 'bold'
+                              <Typography
+                                variant="body2"
+                                sx={{
+                                  minWidth: '24px',
+                                  fontWeight: 'bold',
+                                  fontSize: '0.875rem'
                                 }}
                               >
                                 {String.fromCharCode(65 + index)}:
@@ -954,6 +997,10 @@ function ManajemenTes() {
                                   newPilihanJawaban[index].teks_pilihan = e.target.value;
                                   setPilihanJawaban(newPilihanJawaban);
                                 }}
+                                sx={{
+                                  '& .MuiInputLabel-root': { fontSize: '0.875rem' },
+                                  '& .MuiOutlinedInput-input': { fontSize: '0.875rem' }
+                                }}
                               />
                             </Box>
                             <input
@@ -964,7 +1011,12 @@ function ManajemenTes() {
                                 newPilihanJawaban[index].gambar_pilihan = e.target.files[0];
                                 setPilihanJawaban(newPilihanJawaban);
                               }}
-                              style={{ width: '100%', marginTop: '8px' }}
+                              style={{
+                                width: '100%',
+                                marginTop: '8px',
+                                padding: '4px',
+                                fontSize: '0.875rem'
+                              }}
                             />
                           </Box>
                         ))}
@@ -972,7 +1024,7 @@ function ManajemenTes() {
                     )}
 
                     <Box sx={{ borderTop: 1, borderColor: '#e0e0e0', pt: 3, mt: 2 }}>
-                      <Typography variant="body2" fontWeight="medium" mb={2}>
+                      <Typography variant="body2" fontWeight="medium" mb={2} sx={{ fontSize: '0.875rem' }}>
                         Import Soal dari Excel
                       </Typography>
                       <Box sx={{ mb: 2 }}>
@@ -980,7 +1032,13 @@ function ManajemenTes() {
                           type="file"
                           accept=".xlsx, .xls"
                           onChange={(e) => setExcelFile(e.target.files[0])}
-                          style={{ width: '100%' }}
+                          style={{
+                            width: '100%',
+                            padding: '8px',
+                            border: '1px solid #ced4da',
+                            borderRadius: '4px',
+                            fontSize: '0.875rem'
+                          }}
                         />
                       </Box>
 
@@ -990,16 +1048,23 @@ function ManajemenTes() {
                           onClick={handleImportSoal}
                           disabled={loading || !excelFile}
                           startIcon={<UploadIcon />}
+                          size="small"
+                          sx={{ fontSize: '0.875rem' }}
                         >
                           {loading ? "Mengimport..." : "Import Soal"}
                         </Button>
                       </Box>
                     </Box>
 
-                    <Box display="flex" justifyContent="flex-end" gap={2} mt={2}>
-                      <Button 
-                        variant="outlined" 
+                    <Box display="flex" justifyContent="flex-end" gap={2} mt={3}>
+                      <Button
+                        variant="outlined"
                         onClick={handleCloseModalSoal}
+                        size="small"
+                        sx={{
+                          fontSize: '0.875rem',
+                          color: 'rgba(0, 0, 0, 0.87)'
+                        }}
                       >
                         Batal
                       </Button>
@@ -1007,9 +1072,15 @@ function ManajemenTes() {
                         variant="contained"
                         type="submit"
                         disabled={loading}
-                        sx={{ backgroundColor: '#cb0c9f', '&:hover': { backgroundColor: '#b00b8a' } }}
+                        size="small"
+                        sx={{
+                          fontSize: '0.875rem',
+                          backgroundColor: '#cb0c9f',
+                          '&:hover': { backgroundColor: '#b00b8a' },
+                          color: '#ffffff' // Warna putih dalam hex
+                        }}
                       >
-                        {loading ? <CircularProgress size={24} /> : "Simpan"}
+                        {loading ? <CircularProgress size={20} sx={{ color: '#ffffff' }} /> : "Simpan"}
                       </Button>
                     </Box>
                   </form>
