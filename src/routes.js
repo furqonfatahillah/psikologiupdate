@@ -58,6 +58,7 @@ import CreditCard from "examples/Icons/CreditCard";
 import Cube from "examples/Icons/Cube";
 import HasilLaporan from "layouts/hasil-laporan";
 import HasilUjian from "layouts/hasil-ujian";
+import ManajemenPengguna from "layouts/manajemen-pengguna";
 
 const routes = [
   {
@@ -97,12 +98,21 @@ const routes = [
     noCollapse: true,
   },
   {
-    type: "collapse",
+    type: "hidden",
     name: "Hasil Ujian",
     key: "hasil-ujian",
     route: "/hasil-ujian",
     icon: <Office size="12px" />,
     component: <HasilUjian />,
+    noCollapse: true,
+  },
+  {
+    type: "collapse",
+    name: "Manajemen Pengguna",
+    key: "manajemen-pengguna",
+    route: "/manajemen-pengguna",
+    icon: <Office size="12px" />,
+    component: <ManajemenPengguna />,
     noCollapse: true,
   },
   {
