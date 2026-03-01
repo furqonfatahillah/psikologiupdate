@@ -56,6 +56,8 @@ import SpaceShip from "examples/Icons/SpaceShip";
 import CustomerSupport from "examples/Icons/CustomerSupport";
 import CreditCard from "examples/Icons/CreditCard";
 import Cube from "examples/Icons/Cube";
+import HasilLaporan from "layouts/hasil-laporan";
+import HasilUjian from "layouts/hasil-ujian";
 
 const routes = [
   {
@@ -83,6 +85,24 @@ const routes = [
     route: "/manajemen-tes",
     icon: <Office size="12px" />,
     component: <ManajemenTes />,
+    noCollapse: true,
+  },
+  {
+    type: "collapse",
+    name: "Hasil Laporan",
+    key: "hasil-laporan",
+    route: "/hasil-laporan",
+    icon: <Office size="12px" />,
+    component: <HasilLaporan />,
+    noCollapse: true,
+  },
+  {
+    type: "collapse",
+    name: "Hasil Ujian",
+    key: "hasil-ujian",
+    route: "/hasil-ujian",
+    icon: <Office size="12px" />,
+    component: <HasilUjian />,
     noCollapse: true,
   },
   {
