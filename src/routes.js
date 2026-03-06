@@ -59,6 +59,7 @@ import Cube from "examples/Icons/Cube";
 import HasilLaporan from "layouts/hasil-laporan";
 import HasilUjian from "layouts/hasil-ujian";
 import ManajemenPengguna from "layouts/manajemen-pengguna";
+import ManajemenTampilan from "layouts/manajemen-tampilan";
 
 const routes = [
   {
@@ -113,6 +114,15 @@ const routes = [
     route: "/manajemen-pengguna",
     icon: <Office size="12px" />,
     component: <ManajemenPengguna />,
+    noCollapse: true,
+  },
+  {
+    type: "collapse",
+    name: "Manajemen Tampilan",
+    key: "manajemen-tampilan",
+    route: "/manajemen-tampilan",
+    icon: <Office size="12px" />,
+    component: <ManajemenTampilan />,
     noCollapse: true,
   },
   {

@@ -24,78 +24,107 @@ import SoftBox from "components/SoftBox";
 import SoftTypography from "components/SoftTypography";
 
 // Soft UI Dashboard React examples
-import DefaultNavbar from "examples/Navbars/DefaultNavbar";
 import PageLayout from "examples/LayoutContainers/PageLayout";
 
-// Authentication layout components
-import Footer from "layouts/authentication/components/Footer";
-
-function CoverLayout({ color, header, title, description, image, top, children }) {
+function CoverLayout({ color, header, title, description, image, children }) {
   return (
     <PageLayout background="white">
-      <DefaultNavbar
-        action={{
-          type: "external",
-          route: "https://creative-tim.com/product/soft-ui-dashboard-react",
-          label: "free download",
-          color: "dark",
+      {/* Background Image Full Screen */}
+      <SoftBox
+        position="fixed"
+        top={0}
+        left={0}
+        right={0}
+        bottom={0}
+        zIndex={0}
+        sx={{
+          backgroundImage: `url(${image})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
         }}
       />
+
+      {/* Overlay gelap untuk membuat form lebih terbaca */}
+      <SoftBox
+        position="fixed"
+        top={0}
+        left={0}
+        right={0}
+        bottom={0}
+        zIndex={1}
+        sx={{
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
+        }}
+      />
+
+      {/* Content - Form di tengah dengan card putih */}
       <Grid
         container
         justifyContent="center"
+        alignItems="center"
         sx={{
-          minHeight: "75vh",
+          minHeight: "100vh",
           margin: 0,
+          position: "relative",
+          zIndex: 2,
         }}
       >
-        <Grid item xs={11} sm={8} md={5} xl={3}>
-          <SoftBox mt={top}>
-            <SoftBox pt={3} px={3}>
-              {!header ? (
-                <>
-                  <SoftBox mb={1}>
-                    <SoftTypography variant="h3" fontWeight="bold" color={color} textGradient>
-                      {title}
-                    </SoftTypography>
-                  </SoftBox>
-                  <SoftTypography variant="body2" fontWeight="regular" color="text">
-                    {description}
-                  </SoftTypography>
-                </>
-              ) : (
-                header
-              )}
-            </SoftBox>
-            <SoftBox p={3}>{children}</SoftBox>
-          </SoftBox>
-        </Grid>
-        <Grid item xs={12} md={5}>
+        <Grid item xs={11} sm={8} md={5} lg={4}>
+          {/* Card Putih */}
           <SoftBox
-            height="100%"
-            display={{ xs: "none", md: "block" }}
-            position="relative"
-            right={{ md: "-12rem", xl: "-16rem" }}
-            mr={-16}
+            bgColor="white"
+            borderRadius="lg"
+            shadow="lg"
+            p={3}
             sx={{
-              transform: "skewX(-10deg)",
-              overflow: "hidden",
-              borderBottomLeftRadius: ({ borders: { borderRadius } }) => borderRadius.lg,
+              backdropFilter: "blur(10px)",
             }}
           >
-            <SoftBox
-              ml={-8}
-              height="100%"
-              sx={{
-                backgroundImage: `url(${image})`,
-                backgroundSize: "cover",
-                transform: "skewX(10deg)",
-              }}
-            />
+            {/* Header Content - DIPUSATKAN */}
+            {(title || description || header) && (
+              <SoftBox pt={2} px={2} mb={3} textAlign="center">
+                {!header ? (
+                  <>
+                    {title && (
+                      <SoftBox mb={1}>
+                        <SoftTypography
+                          variant="h3"
+                          fontWeight="bold"
+                          color={color}
+                          textGradient
+                          sx={{ textAlign: "center" }}
+                        >
+                          {title}
+                        </SoftTypography>
+                      </SoftBox>
+                    )}
+                    {description && (
+                      <SoftTypography
+                        variant="body2"
+                        fontWeight="regular"
+                        color="text"
+                        sx={{ textAlign: "center" }}
+                      >
+                        {description}
+                      </SoftTypography>
+                    )}
+                  </>
+                ) : (
+                  <SoftBox sx={{ textAlign: "center" }}>
+                    {header}
+                  </SoftBox>
+                )}
+              </SoftBox>
+            )}
+
+            {/* Children Content (Form) */}
+            <SoftBox px={2} pb={2}>
+              {children}
+            </SoftBox>
           </SoftBox>
         </Grid>
       </Grid>
-      <Footer />
     </PageLayout>
   );
 }
@@ -106,7 +135,6 @@ CoverLayout.defaultProps = {
   title: "",
   description: "",
   color: "info",
-  top: 20,
 };
 
 // Typechecking props for the CoverLayout
@@ -125,7 +153,6 @@ CoverLayout.propTypes = {
   title: PropTypes.string,
   description: PropTypes.string,
   image: PropTypes.string.isRequired,
-  top: PropTypes.number,
   children: PropTypes.node.isRequired,
 };
 

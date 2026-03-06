@@ -556,8 +556,10 @@ const HasilUjian = () => {
               <Button
                 variant="outlined"
                 onClick={() => setModalOpen(false)}
-                sx={{ fontSize: '0.875rem' }}
-              >
+                sx={{
+                  fontSize: '0.875rem',
+                  color: 'rgba(0, 0, 0, 0.87)'
+                }}              >
                 Batal
               </Button>
               <Button
@@ -571,7 +573,7 @@ const HasilUjian = () => {
                   color: 'white'
                 }}
               >
-                {loading ? <CircularProgress size={20} sx={{ color: 'white' }} /> : "Update"}
+                {loading ? <CircularProgress size={20} sx={{ color: '#ffff' }} /> : "Update"}
               </Button>
             </Box>
           </form>

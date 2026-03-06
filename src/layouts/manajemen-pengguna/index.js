@@ -327,8 +327,7 @@ const ManajemenPengguna = () => {
       } catch (error) {
         Swal.fire(
           "Gagal!",
-          `Gagal menghapus ${type}: ${
-            error.response?.data?.message || "Terjadi kesalahan"
+          `Gagal menghapus ${type}: ${error.response?.data?.message || "Terjadi kesalahan"
           }`,
           "error"
         );
@@ -362,8 +361,7 @@ const ManajemenPengguna = () => {
     } catch (error) {
       Swal.fire(
         "Gagal!",
-        `Tambah admin gagal: ${
-          error.response?.data?.message || "Terjadi kesalahan"
+        `Tambah admin gagal: ${error.response?.data?.message || "Terjadi kesalahan"
         }`,
         "error"
       );
@@ -419,8 +417,7 @@ const ManajemenPengguna = () => {
       console.error("Error:", error);
       Swal.fire(
         "Gagal!",
-        `Tambah data gagal: ${
-          error.response?.data?.message || "Terjadi kesalahan"
+        `Tambah data gagal: ${error.response?.data?.message || "Terjadi kesalahan"
         }`,
         "error"
       );
@@ -446,8 +443,7 @@ const ManajemenPengguna = () => {
     } catch (error) {
       Swal.fire(
         "Gagal!",
-        `Gagal mengambil data pengguna: ${
-          error.response?.data?.message || "Terjadi kesalahan"
+        `Gagal mengambil data pengguna: ${error.response?.data?.message || "Terjadi kesalahan"
         }`,
         "error"
       );
@@ -470,8 +466,7 @@ const ManajemenPengguna = () => {
     } catch (error) {
       Swal.fire(
         "Gagal!",
-        `Gagal mengambil data admin: ${
-          error.response?.data?.message || "Terjadi kesalahan"
+        `Gagal mengambil data admin: ${error.response?.data?.message || "Terjadi kesalahan"
         }`,
         "error"
       );
@@ -656,10 +651,10 @@ const ManajemenPengguna = () => {
                       px: 3,
                     },
                     '& .Mui-selected': {
-                      color: '#cb0c9f'
+                      color: '#ffffff'
                     },
                     '& .MuiTabs-indicator': {
-                      backgroundColor: '#cb0c9f'
+                      backgroundColor: '#ffffff'
                     }
                   }}
                 >
@@ -729,8 +724,8 @@ const ManajemenPengguna = () => {
                         </Typography>
                         <Select
                           options={listKesatuan.map(item => ({ value: item.id, label: item.nama_kesatuan }))}
-                          value={listKesatuan.find(item => item.id === parseInt(kesatuan)) ? 
-                            { value: parseInt(kesatuan), label: listKesatuan.find(item => item.id === parseInt(kesatuan))?.nama_kesatuan } : 
+                          value={listKesatuan.find(item => item.id === parseInt(kesatuan)) ?
+                            { value: parseInt(kesatuan), label: listKesatuan.find(item => item.id === parseInt(kesatuan))?.nama_kesatuan } :
                             null}
                           onChange={(selected) => setKesatuan(selected ? selected.value : '')}
                           placeholder="Pilih kesatuan..."
@@ -793,8 +788,10 @@ const ManajemenPengguna = () => {
                           variant="outlined"
                           onClick={() => setOpenModalUser(false)}
                           size="small"
-                          sx={{ fontSize: '0.875rem' }}
-                        >
+                          sx={{
+                            fontSize: '0.875rem',
+                            color: 'rgba(0, 0, 0, 0.87)'
+                          }}                        >
                           Batal
                         </Button>
                         <Button
@@ -809,7 +806,7 @@ const ManajemenPengguna = () => {
                             color: 'white'
                           }}
                         >
-                          {loading ? <CircularProgress size={20} sx={{ color: 'white' }} /> : "Simpan"}
+                          {loading ? <CircularProgress size={20} sx={{ color: '#ffff' }} /> : "Simpan"}
                         </Button>
                       </Box>
                     </form>
@@ -880,11 +877,11 @@ const ManajemenPengguna = () => {
                         </Typography>
                         <Select
                           options={pangkatList.map(item => ({ value: item.id, label: item.nama_pangkat }))}
-                          value={pangkatList.find(item => item.id === parseInt(updatedBiodata.masterPangkatId)) ? 
-                            { value: parseInt(updatedBiodata.masterPangkatId), label: pangkatList.find(item => item.id === parseInt(updatedBiodata.masterPangkatId))?.nama_pangkat } : 
+                          value={pangkatList.find(item => item.id === parseInt(updatedBiodata.masterPangkatId)) ?
+                            { value: parseInt(updatedBiodata.masterPangkatId), label: pangkatList.find(item => item.id === parseInt(updatedBiodata.masterPangkatId))?.nama_pangkat } :
                             null}
-                          onChange={(selected) => handleUserChange({ 
-                            target: { name: 'masterPangkatId', value: selected ? selected.value : '' } 
+                          onChange={(selected) => handleUserChange({
+                            target: { name: 'masterPangkatId', value: selected ? selected.value : '' }
                           })}
                           placeholder="Pilih pangkat..."
                           isClearable
@@ -929,7 +926,10 @@ const ManajemenPengguna = () => {
                           variant="outlined"
                           onClick={() => setOpenUpdateUserModal(false)}
                           size="small"
-                          sx={{ fontSize: '0.875rem' }}
+                          sx={{
+                            fontSize: '0.875rem',
+                            color: 'rgba(0, 0, 0, 0.87)'
+                          }}
                         >
                           Batal
                         </Button>
@@ -941,7 +941,7 @@ const ManajemenPengguna = () => {
                             fontSize: '0.875rem',
                             backgroundColor: '#cb0c9f',
                             '&:hover': { backgroundColor: '#b00b8a' },
-                            color: 'white'
+                            color: '#ffff'
                           }}
                         >
                           Simpan
@@ -1058,7 +1058,10 @@ const ManajemenPengguna = () => {
                             variant="outlined"
                             onClick={() => setOpenModalAdmin(false)}
                             size="small"
-                            sx={{ fontSize: '0.875rem' }}
+                            sx={{
+                              fontSize: '0.875rem',
+                              color: 'rgba(0, 0, 0, 0.87)'
+                            }}
                           >
                             Batal
                           </Button>
@@ -1074,7 +1077,7 @@ const ManajemenPengguna = () => {
                               color: 'white'
                             }}
                           >
-                            {loading ? <CircularProgress size={20} sx={{ color: 'white' }} /> : "Simpan"}
+                            {loading ? <CircularProgress size={20} sx={{ color: '#ffff' }} /> : "Simpan"}
                           </Button>
                         </Box>
                       </form>
@@ -1145,8 +1148,8 @@ const ManajemenPengguna = () => {
                               { value: 'SUPERADMIN', label: 'SUPERADMIN' }
                             ]}
                             value={adminToUpdate?.role ? { value: adminToUpdate.role, label: adminToUpdate.role } : null}
-                            onChange={(selected) => handleAdminChange({ 
-                              target: { name: 'role', value: selected ? selected.value : '' } 
+                            onChange={(selected) => handleAdminChange({
+                              target: { name: 'role', value: selected ? selected.value : '' }
                             })}
                             placeholder="Pilih role..."
                             styles={selectStyles}
@@ -1158,22 +1161,26 @@ const ManajemenPengguna = () => {
                             variant="outlined"
                             onClick={() => setOpenUpdateAdminModal(false)}
                             size="small"
-                            sx={{ fontSize: '0.875rem' }}
+                            sx={{
+                              fontSize: '0.875rem',
+                              color: 'rgba(0, 0, 0, 0.87)'
+                            }}
                           >
                             Batal
                           </Button>
                           <Button
                             variant="contained"
-                            onClick={handleUpdateAdmin}
+                            type="submit"
+                            disabled={loading}
                             size="small"
                             sx={{
                               fontSize: '0.875rem',
                               backgroundColor: '#cb0c9f',
                               '&:hover': { backgroundColor: '#b00b8a' },
-                              color: 'white'
+                              color: '#ffffff' // Warna putih dalam hex
                             }}
                           >
-                            Simpan
+                            {loading ? <CircularProgress size={20} sx={{ color: '#ffffff' }} /> : "Simpan"}
                           </Button>
                         </Box>
                       </Box>
