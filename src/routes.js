@@ -116,7 +116,7 @@ const routes = [
     noCollapse: true,
   },
   {
-    type: "collapse",
+    type: "hidden",
     name: "Tables",
     key: "tables",
     route: "/tables",
@@ -125,7 +125,7 @@ const routes = [
     noCollapse: true,
   },
   {
-    type: "collapse",
+    type: "hidden",
     name: "Billing",
     key: "billing",
     route: "/billing",
@@ -134,7 +134,7 @@ const routes = [
     noCollapse: true,
   },
   {
-    type: "collapse",
+    type: "hidden",
     name: "Virtual Reality",
     key: "virtual-reality",
     route: "/virtual-reality",
@@ -143,7 +143,7 @@ const routes = [
     noCollapse: true,
   },
   {
-    type: "collapse",
+    type: "hidden",
     name: "RTL",
     key: "rtl",
     route: "/rtl",
@@ -151,9 +151,9 @@ const routes = [
     component: <RTL />,
     noCollapse: true,
   },
-  { type: "title", title: "Account Pages", key: "account-pages" },
+  // { type: "title", title: "Account Pages", key: "account-pages" },
   {
-    type: "collapse",
+    type: "hidden",
     name: "Profile",
     key: "profile",
     route: "/profile",
@@ -162,7 +162,7 @@ const routes = [
     noCollapse: true,
   },
   {
-    type: "collapse",
+    type: "hidden",
     name: "Sign In",
     key: "sign-in",
     route: "/authentication/sign-in",
@@ -171,7 +171,7 @@ const routes = [
     noCollapse: true,
   },
   {
-    type: "collapse",
+    type: "hidden",
     name: "Sign Up",
     key: "sign-up",
     route: "/authentication/sign-up",
