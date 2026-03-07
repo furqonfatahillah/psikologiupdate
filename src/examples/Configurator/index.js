@@ -198,7 +198,7 @@ function Configurator() {
 
         <Divider />
 
-        <SoftBox mt={3} mb={2}>
+        {/* <SoftBox mt={3} mb={2}>
           <SoftBox mb={2}>
             <SoftButton
               component={Link}
@@ -223,8 +223,8 @@ function Configurator() {
           >
             view documentation
           </SoftButton>
-        </SoftBox>
-        <SoftBox display="flex" justifyContent="center">
+        </SoftBox> */}
+        {/* <SoftBox display="flex" justifyContent="center">
           <a
             className="github-button"
             href="https://github.com/creativetimofficial/soft-ui-dashboard-react"
@@ -265,7 +265,7 @@ function Configurator() {
               &nbsp; Share
             </SoftButton>
           </SoftBox>
-        </SoftBox>
+        </SoftBox> */}
       </SoftBox>
     </ConfiguratorRoot>
   );
