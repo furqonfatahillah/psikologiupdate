@@ -39,6 +39,9 @@ import rtlPlugin from "stylis-plugin-rtl";
 import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
 
+import ProtectedRouteAdmin from "components/Protected/ProtectedRouteAdmin";
+import ProtectedRouteUser from "components/Protected/ProtectedRouteUser";
+
 // Soft UI Dashboard React routes
 import routes from "routes";
 
@@ -102,7 +105,51 @@ export default function App() {
       }
 
       if (route.route) {
-        return <Route exact path={route.route} element={route.component} key={route.key} />;
+
+        // USER ROUTE
+        if (route.route === "/user/biodata" || route.route === "/user/profile" || route.route === "/user/detail-profile" || route.route === "/user/instruksi-tes" || route.route === "/user/jenis-pengajuan" || route.route === "/user/jenis-tes" || route.route === "/user/riwayat-tes" || route.route === "/user/ujian") {
+          return (
+            <Route
+              key={route.key}
+              path={route.route}
+              element={
+                <ProtectedRouteUser>
+                  {route.component}
+                </ProtectedRouteUser>
+              }
+            />
+          );
+        }
+
+        // ADMIN ROUTE
+        if (
+          route.route === "/dashboard" ||
+          route.route === "/template" ||
+          route.route === "/manajemen-tes" ||
+          route.route === "/hasil-laporan" ||
+          route.route === "/manajemen-pengguna" ||
+          route.route === "/manajemen-tampilan"
+        ) {
+          return (
+            <Route
+              key={route.key}
+              path={route.route}
+              element={
+                <ProtectedRouteAdmin>
+                  {route.component}
+                </ProtectedRouteAdmin>
+              }
+            />
+          );
+        }
+
+        return (
+          <Route
+            key={route.key}
+            path={route.route}
+            element={route.component}
+          />
+        );
       }
 
       return null;

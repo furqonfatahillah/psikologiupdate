@@ -60,7 +60,10 @@ import HasilLaporan from "layouts/hasil-laporan";
 import HasilUjian from "layouts/hasil-ujian";
 import ManajemenPengguna from "layouts/manajemen-pengguna";
 import ManajemenTampilan from "layouts/manajemen-tampilan";
+import Biodata from "layouts/user/biodata";
 
+import ProtectedRouteAdmin from "components/Protected/ProtectedRouteAdmin";
+import ProtectedRouteUser from "components/Protected/ProtectedRouteUser";
 const routes = [
   {
     type: "collapse",
@@ -162,6 +165,19 @@ const routes = [
     noCollapse: true,
   },
   // { type: "title", title: "Account Pages", key: "account-pages" },
+
+
+  // USER
+
+  {
+    type: "hidden",
+    name: "Biodata",
+    key: "biodata",
+    route: "/biodata",
+    icon: <CustomerSupport size="12px" />,
+    component: <Biodata />,
+    noCollapse: true,
+  },
   {
     type: "hidden",
     name: "Profile",
