@@ -14,6 +14,7 @@ Coded by www.creative-tim.com
 */
 
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // Tambahkan ini
 
 // react-router-dom components
 import { useLocation, NavLink } from "react-router-dom";
@@ -43,7 +44,11 @@ import sidenavLogoLabel from "examples/Sidenav/styles/sidenav";
 // Soft UI Dashboard React context
 import { useSoftUIController, setMiniSidenav } from "context";
 
+// SweetAlert2 untuk konfirmasi logout
+import Swal from "sweetalert2";
+
 function Sidenav({ color, brand, brandName, routes, ...rest }) {
+  const navigate = useNavigate(); // Tambahkan hook navigate
   const [controller, dispatch] = useSoftUIController();
   const { miniSidenav, transparentSidenav } = controller;
   const location = useLocation();
@@ -51,6 +56,41 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
   const collapseName = pathname.split("/").slice(1)[0];
 
   const closeSidenav = () => setMiniSidenav(dispatch, true);
+
+  // Fungsi untuk handle logout
+  const handleLogout = () => {
+    Swal.fire({
+      title: "Konfirmasi Logout",
+      text: "Apakah Anda yakin ingin keluar?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#cb0c9f",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Ya, Logout",
+      cancelButtonText: "Batal",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Hapus semua data session dan local storage
+        sessionStorage.removeItem("token");
+        sessionStorage.removeItem("role");
+        sessionStorage.removeItem("kategoriId");
+        sessionStorage.removeItem("kategoriName");
+        localStorage.removeItem("tokenLocal");
+        localStorage.removeItem("userTestSessionId");
+        
+        // Navigasi ke halaman login
+        navigate("/login");
+        
+        Swal.fire({
+          title: "Berhasil Logout!",
+          text: "Anda telah keluar dari sistem.",
+          icon: "success",
+          timer: 1500,
+          showConfirmButton: false,
+        });
+      }
+    });
+  };
 
   useEffect(() => {
     // A function that sets the mini state of the sidenav.
@@ -157,21 +197,25 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
       </SoftBox>
       <Divider />
       <List>{renderRoutes}</List>
-      <SoftBox pt={2} my={2} mx={2} mt="auto">
-        {/* <SidenavCard /> */}
-        {/* <SoftBox mt={2}>
-          <SoftButton
-            component="a"
-            href="https://creative-tim.com/product/soft-ui-dashboard-pro-react"
-            target="_blank"
-            rel="noreferrer"
-            variant="gradient"
-            color={color}
-            fullWidth
-          >
-            upgrade to pro
-          </SoftButton>
-        </SoftBox> */}
+      
+      {/* Logout Button Section */}
+      <SoftBox pt={2} my={2} mx={2}>
+        <SoftButton
+          variant="gradient"
+          color="error"
+          fullWidth
+          onClick={handleLogout}
+          startIcon={<Icon>logout</Icon>}
+          sx={{
+            transition: "all 0.3s ease",
+            "&:hover": {
+              transform: "translateY(-2px)",
+              boxShadow: "0 7px 20px rgba(220, 53, 69, 0.4)",
+            },
+          }}
+        >
+          Logout
+        </SoftButton>
       </SoftBox>
     </SidenavRoot>
   );

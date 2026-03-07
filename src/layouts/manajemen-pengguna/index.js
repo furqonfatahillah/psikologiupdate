@@ -278,7 +278,7 @@ const ManajemenPengguna = () => {
         });
 
         if (response.data.status === "success") {
-          setAdminData(response.data.data);
+          setAdminData(response.data.data.admins);
         }
       } catch (error) {
         console.error("Gagal mengambil data admin:", error);
