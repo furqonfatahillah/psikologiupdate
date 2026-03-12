@@ -14,6 +14,7 @@ Coded by www.creative-tim.com
 */
 
 import { useState, useEffect, useMemo } from "react";
+import { jwtDecode } from "jwt-decode"; // Tambahkan import ini
 
 // react-router components
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
@@ -46,7 +47,7 @@ import ProtectedRouteUser from "components/Protected/ProtectedRouteUser";
 import routes from "routes";
 
 // Soft UI Dashboard React contexts
-import { useSoftUIController, setMiniSidenav, setOpenConfigurator } from "context";
+import { useSoftUIController, setMiniSidenav, setOpenConfigurator, setLayout } from "context";
 
 // Images
 import brand from "assets/images/psikologi.svg";
@@ -57,6 +58,56 @@ export default function App() {
   const [onMouseEnter, setOnMouseEnter] = useState(false);
   const [rtlCache, setRtlCache] = useState(null);
   const { pathname } = useLocation();
+
+  // Fungsi untuk mendapatkan role user dari token
+  const getUserRole = () => {
+    const token = sessionStorage.getItem("token");
+    if (!token) return null;
+    
+    try {
+      const decoded = jwtDecode(token);
+      return decoded.role;
+    } catch (error) {
+      console.error("Error decoding token:", error);
+      return null;
+    }
+  };
+
+  // Effect untuk mengatur layout berdasarkan role dan pathname
+  useEffect(() => {
+    const role = getUserRole();
+    
+    // Tentukan layout berdasarkan role dan path
+    if (role === "ADMIN" || role === "SUPERADMIN") {
+      // Admin selalu menggunakan layout dashboard (dengan sidebar)
+      setLayout(dispatch, "dashboard");
+    } else if (role === "USER") {
+      // Untuk user, cek apakah path termasuk halaman user
+      const userPaths = [
+        "/biodata",
+        "/profile",
+        "/detail-profile",
+        "/instruksi-tes",
+        "/jenis-pengajuan",
+        "/jenis-tes",
+        "/riwayat-tes",
+        "/ujian"
+      ];
+      
+      const isUserPath = userPaths.some(path => pathname.startsWith(path));
+      
+      if (isUserPath) {
+        // Jika di halaman user, set layout ke "user" atau "vr" (tanpa sidebar)
+        setLayout(dispatch, "vr"); // Menggunakan layout vr yang tidak menampilkan sidebar
+      } else {
+        // Jika di halaman lain, gunakan dashboard
+        setLayout(dispatch, "dashboard");
+      }
+    } else {
+      // Jika tidak login, redirect ke login
+      setLayout(dispatch, "vr");
+    }
+  }, [pathname, dispatch]);
 
   // Cache for the rtl
   useMemo(() => {
@@ -183,6 +234,7 @@ export default function App() {
     <CacheProvider value={rtlCache}>
       <ThemeProvider theme={themeRTL}>
         <CssBaseline />
+        {/* Sidenav hanya ditampilkan jika layout === "dashboard" */}
         {layout === "dashboard" && (
           <>
             <Sidenav
@@ -207,6 +259,7 @@ export default function App() {
   ) : (
     <ThemeProvider theme={theme}>
       <CssBaseline />
+      {/* Sidenav hanya ditampilkan jika layout === "dashboard" */}
       {layout === "dashboard" && (
         <>
           <Sidenav
@@ -218,7 +271,8 @@ export default function App() {
                 BIRO SDM <br />
                 POLDA SULSEL
               </>
-            } routes={routes}
+            }
+            routes={routes}
             onMouseEnter={handleOnMouseEnter}
             onMouseLeave={handleOnMouseLeave}
           />
