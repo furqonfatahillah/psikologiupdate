@@ -64,6 +64,12 @@ import Biodata from "layouts/user/biodata";
 
 import ProtectedRouteAdmin from "components/Protected/ProtectedRouteAdmin";
 import ProtectedRouteUser from "components/Protected/ProtectedRouteUser";
+import JenisTes from "layouts/user/jenis-tes";
+import RiwayatTes from "layouts/user/riwayat-tes";
+import JenisPengajuan from "layouts/user/jenis-pengajuan";
+import InstruksiTes from "layouts/user/instruksi-tes";
+import DetailProfile from "layouts/user/detail-profile";
+import Ujian from "layouts/user/ujian";
 const routes = [
   {
     type: "collapse",
@@ -176,6 +182,60 @@ const routes = [
     route: "/biodata",
     icon: <CustomerSupport size="12px" />,
     component: <Biodata />,
+    noCollapse: true,
+  },
+  {
+    type: "hidden",
+    name: "JenisTes",
+    key: "jenis-tes",
+    route: "/jenis-tes",
+    icon: <CustomerSupport size="12px" />,
+    component: <JenisTes />,
+    noCollapse: true,
+  },
+  {
+    type: "hidden",
+    name: "RiwayatTes",
+    key: "riwayat-tes",
+    route: "/riwayat-tes",
+    icon: <CustomerSupport size="12px" />,
+    component: <RiwayatTes />,
+    noCollapse: true,
+  },
+  {
+    type: "hidden",
+    name: "JenisPengajuan",
+    key: "jenis-pengajuan",
+    route: "/jenis-pengajuan",
+    icon: <CustomerSupport size="12px" />,
+    component: <JenisPengajuan />,
+    noCollapse: true,
+  },
+  {
+    type: "hidden",
+    name: "InstruksiTes",
+    key: "instruksi-tes",
+    route: "/instruksi-tes",
+    icon: <CustomerSupport size="12px" />,
+    component: <InstruksiTes />,
+    noCollapse: true,
+  },
+  {
+    type: "hidden",
+    name: "DetailProfile",
+    key: "detail-profile",
+    route: "/detail-profile",
+    icon: <CustomerSupport size="12px" />,
+    component: <DetailProfile />,
+    noCollapse: true,
+  },
+  {
+    type: "hidden",
+    name: "Ujian",
+    key: "ujian",
+    route: "/ujian",
+    icon: <CustomerSupport size="12px" />,
+    component: <Ujian />,
     noCollapse: true,
   },
   {
