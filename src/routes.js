@@ -1,40 +1,3 @@
-/**
-=========================================================
-* Soft UI Dashboard React - v4.0.1
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/soft-ui-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
-/** 
-  All of the routes for the Soft UI Dashboard React are added here,
-  You can add a new route, customize the routes and delete the routes here.
-
-  Once you add a new route on this file it will be visible automatically on
-  the Sidenav.
-
-  For adding a new route you can follow the existing routes in the routes array.
-  1. The `type` key with the `collapse` value is used for a route.
-  2. The `type` key with the `title` value is used for a title inside the Sidenav. 
-  3. The `type` key with the `divider` value is used for a divider between Sidenav items.
-  4. The `name` key is used for the name of the route on the Sidenav.
-  5. The `key` key is used for the key of the route (It will help you with the key prop inside a loop).
-  6. The `icon` key is used for the icon of the route on the Sidenav, you have to add a node.
-  7. The `collapse` key is used for making a collapsible item on the Sidenav that has other routes
-  inside (nested routes), you need to pass the nested routes inside an array as a value for the `collapse` key.
-  8. The `route` key is used to store the route location which is used for the react router.
-  9. The `href` key is used to store the external links location.
-  10. The `title` key is only for the item with the type of `title` and its used for the title text on the Sidenav.
-  10. The `component` key is used to store the component of its route.
-*/
-
 // Soft UI Dashboard React layouts
 import Dashboard from "./layouts/dashboard/index";
 import Tables from "layouts/tables";
@@ -47,7 +10,25 @@ import SignUp from "layouts/authentication/sign-up";
 import Template from "layouts/template";
 import ManajemenTes from "layouts/manajemen-tes";
 
-// Soft UI Dashboard React icons
+import HasilLaporan from "layouts/hasil-laporan";
+import HasilUjian from "layouts/hasil-ujian";
+import ManajemenPengguna from "layouts/manajemen-pengguna";
+import ManajemenTampilan from "layouts/manajemen-tampilan";
+
+// USER
+import Biodata from "layouts/user/biodata";
+import JenisTes from "layouts/user/jenis-tes";
+import RiwayatTes from "layouts/user/riwayat-tes";
+import JenisPengajuan from "layouts/user/jenis-pengajuan";
+import InstruksiTes from "layouts/user/instruksi-tes";
+import DetailProfile from "layouts/user/detail-profile";
+import Ujian from "layouts/user/ujian";
+
+// Protected
+import ProtectedRouteAdmin from "components/Protected/ProtectedRouteAdmin";
+import ProtectedRouteUser from "components/Protected/ProtectedRouteUser";
+
+// Icons
 import Shop from "examples/Icons/Shop";
 import Office from "examples/Icons/Office";
 import Settings from "examples/Icons/Settings";
@@ -56,124 +37,110 @@ import SpaceShip from "examples/Icons/SpaceShip";
 import CustomerSupport from "examples/Icons/CustomerSupport";
 import CreditCard from "examples/Icons/CreditCard";
 import Cube from "examples/Icons/Cube";
-import HasilLaporan from "layouts/hasil-laporan";
-import HasilUjian from "layouts/hasil-ujian";
-import ManajemenPengguna from "layouts/manajemen-pengguna";
-import ManajemenTampilan from "layouts/manajemen-tampilan";
-import Biodata from "layouts/user/biodata";
 
-import ProtectedRouteAdmin from "components/Protected/ProtectedRouteAdmin";
-import ProtectedRouteUser from "components/Protected/ProtectedRouteUser";
-import JenisTes from "layouts/user/jenis-tes";
-import RiwayatTes from "layouts/user/riwayat-tes";
-import JenisPengajuan from "layouts/user/jenis-pengajuan";
-import InstruksiTes from "layouts/user/instruksi-tes";
-import DetailProfile from "layouts/user/detail-profile";
-import Ujian from "layouts/user/ujian";
 const routes = [
+
+  // ================= ADMIN =================
+
   {
     type: "collapse",
     name: "Dashboard",
     key: "dashboard",
     route: "/dashboard",
     icon: <Shop size="12px" />,
-    component: <Dashboard />,
+    component: (
+      <ProtectedRouteAdmin>
+        <Dashboard />
+      </ProtectedRouteAdmin>
+    ),
     noCollapse: true,
   },
+
   {
     type: "collapse",
     name: "Template",
     key: "template",
     route: "/template",
     icon: <Office size="12px" />,
-    component: <Template />,
+    component: (
+      <ProtectedRouteAdmin>
+        <Template />
+      </ProtectedRouteAdmin>
+    ),
     noCollapse: true,
   },
+
   {
     type: "collapse",
     name: "Manajemen Tes",
     key: "manajemen-tes",
     route: "/manajemen-tes",
     icon: <Office size="12px" />,
-    component: <ManajemenTes />,
+    component: (
+      <ProtectedRouteAdmin>
+        <ManajemenTes />
+      </ProtectedRouteAdmin>
+    ),
     noCollapse: true,
   },
+
   {
     type: "collapse",
     name: "Hasil Laporan",
     key: "hasil-laporan",
     route: "/hasil-laporan",
     icon: <Office size="12px" />,
-    component: <HasilLaporan />,
+    component: (
+      <ProtectedRouteAdmin>
+        <HasilLaporan />
+      </ProtectedRouteAdmin>
+    ),
     noCollapse: true,
   },
+
   {
     type: "hidden",
     name: "Hasil Ujian",
     key: "hasil-ujian",
     route: "/hasil-ujian",
     icon: <Office size="12px" />,
-    component: <HasilUjian />,
+    component: (
+      <ProtectedRouteAdmin>
+        <HasilUjian />
+      </ProtectedRouteAdmin>
+    ),
     noCollapse: true,
   },
+
   {
     type: "collapse",
     name: "Manajemen Pengguna",
     key: "manajemen-pengguna",
     route: "/manajemen-pengguna",
     icon: <Office size="12px" />,
-    component: <ManajemenPengguna />,
+    component: (
+      <ProtectedRouteAdmin>
+        <ManajemenPengguna />
+      </ProtectedRouteAdmin>
+    ),
     noCollapse: true,
   },
+
   {
     type: "collapse",
     name: "Manajemen Tampilan",
     key: "manajemen-tampilan",
     route: "/manajemen-tampilan",
     icon: <Office size="12px" />,
-    component: <ManajemenTampilan />,
+    component: (
+      <ProtectedRouteAdmin>
+        <ManajemenTampilan />
+      </ProtectedRouteAdmin>
+    ),
     noCollapse: true,
   },
-  {
-    type: "hidden",
-    name: "Tables",
-    key: "tables",
-    route: "/tables",
-    icon: <Office size="12px" />,
-    component: <Tables />,
-    noCollapse: true,
-  },
-  {
-    type: "hidden",
-    name: "Billing",
-    key: "billing",
-    route: "/billing",
-    icon: <CreditCard size="12px" />,
-    component: <Billing />,
-    noCollapse: true,
-  },
-  {
-    type: "hidden",
-    name: "Virtual Reality",
-    key: "virtual-reality",
-    route: "/virtual-reality",
-    icon: <Cube size="12px" />,
-    component: <VirtualReality />,
-    noCollapse: true,
-  },
-  {
-    type: "hidden",
-    name: "RTL",
-    key: "rtl",
-    route: "/rtl",
-    icon: <Settings size="12px" />,
-    component: <RTL />,
-    noCollapse: true,
-  },
-  // { type: "title", title: "Account Pages", key: "account-pages" },
 
-
-  // USER
+  // ================= USER =================
 
   {
     type: "hidden",
@@ -181,63 +148,100 @@ const routes = [
     key: "biodata",
     route: "/biodata",
     icon: <CustomerSupport size="12px" />,
-    component: <Biodata />,
+    component: (
+      <ProtectedRouteUser>
+        <Biodata />
+      </ProtectedRouteUser>
+    ),
     noCollapse: true,
   },
+
   {
     type: "hidden",
     name: "JenisTes",
     key: "jenis-tes",
     route: "/jenis-tes",
     icon: <CustomerSupport size="12px" />,
-    component: <JenisTes />,
+    component: (
+      <ProtectedRouteUser>
+        <JenisTes />
+      </ProtectedRouteUser>
+    ),
     noCollapse: true,
   },
+
   {
     type: "hidden",
     name: "RiwayatTes",
     key: "riwayat-tes",
     route: "/riwayat-tes",
     icon: <CustomerSupport size="12px" />,
-    component: <RiwayatTes />,
+    component: (
+      <ProtectedRouteUser>
+        <RiwayatTes />
+      </ProtectedRouteUser>
+    ),
     noCollapse: true,
   },
+
   {
     type: "hidden",
     name: "JenisPengajuan",
     key: "jenis-pengajuan",
     route: "/jenis-pengajuan",
     icon: <CustomerSupport size="12px" />,
-    component: <JenisPengajuan />,
+    component: (
+      <ProtectedRouteUser>
+        <JenisPengajuan />
+      </ProtectedRouteUser>
+    ),
     noCollapse: true,
   },
+
   {
     type: "hidden",
     name: "InstruksiTes",
     key: "instruksi-tes",
     route: "/instruksi-tes",
     icon: <CustomerSupport size="12px" />,
-    component: <InstruksiTes />,
+    component: (
+      <ProtectedRouteUser>
+        <InstruksiTes />
+      </ProtectedRouteUser>
+    ),
     noCollapse: true,
   },
+
   {
     type: "hidden",
     name: "DetailProfile",
     key: "detail-profile",
     route: "/detail-profile",
     icon: <CustomerSupport size="12px" />,
-    component: <DetailProfile />,
+    component: (
+      <ProtectedRouteUser>
+        <DetailProfile />
+      </ProtectedRouteUser>
+    ),
     noCollapse: true,
   },
+
   {
     type: "hidden",
     name: "Ujian",
     key: "ujian",
     route: "/ujian",
     icon: <CustomerSupport size="12px" />,
-    component: <Ujian />,
+    component: (
+      <ProtectedRouteUser>
+        <Ujian />
+      </ProtectedRouteUser>
+    ),
     noCollapse: true,
   },
+
+  // ================= AUTH =================
+
   {
     type: "hidden",
     name: "Profile",
@@ -247,6 +251,7 @@ const routes = [
     component: <Profile />,
     noCollapse: true,
   },
+
   {
     type: "hidden",
     name: "Sign In",
@@ -256,6 +261,7 @@ const routes = [
     component: <SignIn />,
     noCollapse: true,
   },
+
   {
     type: "hidden",
     name: "Sign Up",
