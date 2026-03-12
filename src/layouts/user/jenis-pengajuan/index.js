@@ -103,7 +103,7 @@ const JenisPengajuan = () => {
         
         const newUserTestSessionId = response.data.data.id;
         localStorage.setItem("userTestSessionId", newUserTestSessionId);
-        navigate("/instruksi-tes");
+        navigate("/user/instruksi-tes");
       }
     } catch (error) {
       Swal.fire({
