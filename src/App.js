@@ -107,7 +107,7 @@ export default function App() {
       if (route.route) {
 
         // USER ROUTE
-        if (route.route === "/user/biodata" || route.route === "/user/profile" || route.route === "/user/detail-profile" || route.route === "/user/instruksi-tes" || route.route === "/user/jenis-pengajuan" || route.route === "/user/jenis-tes" || route.route === "/user/riwayat-tes" || route.route === "/user/ujian") {
+        if (route.route === "/biodata" || route.route === "/profile" || route.route === "/detail-profile" || route.route === "/instruksi-tes" || route.route === "/jenis-pengajuan" || route.route === "/jenis-tes" || route.route === "/riwayat-tes" || route.route === "/ujian") {
           return (
             <Route
               key={route.key}

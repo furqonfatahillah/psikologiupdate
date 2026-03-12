@@ -73,7 +73,7 @@ function Biodata() {
             biodata.kesatuan &&
             biodata.alamat
           ) {
-            navigate("/user/jenis-tes");
+            navigate("/jenis-tes");
           }
         }
       } catch (error) {
@@ -167,7 +167,7 @@ function Biodata() {
       });
 
       Swal.fire("Sukses!", "Biodata berhasil dikirim", "success");
-      navigate("/user/jenis-tes");
+      navigate("/jenis-tes");
     } catch (error) {
       Swal.fire(
         "Gagal!",
