@@ -38,7 +38,7 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 
-import BASE_URL from "../../config/BASE_URL";
+import BASE_URL from "../../../config/BASE_URL";
 
 const InstruksiTes = () => {
   const navigate = useNavigate();
