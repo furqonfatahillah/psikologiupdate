@@ -14,6 +14,9 @@ import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Divider from "@mui/material/Divider";
+import Container from "@mui/material/Container";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTheme } from "@mui/material/styles";
 
 // Icons
 import {
@@ -45,6 +48,11 @@ const InstruksiTes = () => {
   const [loading, setLoading] = useState(false);
   const [instruksiTes, setInstruksiTes] = useState("");
   const kategoriId = parseInt(sessionStorage.getItem("kategoriId"), 10);
+
+  // Hook untuk responsive
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
 
   // Fungsi untuk mengambil instruksi tes dari API
   const getInstruksi = async () => {
@@ -123,194 +131,251 @@ const InstruksiTes = () => {
     <DashboardLayout>
       <DashboardNavbar />
       
-      <SoftBox mt={4}>
-        <Grid container justifyContent="center">
-          <Grid item xs={12} md={10} lg={8}>
-            {/* Header Card */}
-            <Card>
-              <SoftBox p={3}>
-                <SoftTypography 
-                  variant="h2" 
-                  fontWeight="bold" 
-                  color="info" 
-                  textGradient
-                  textAlign="center"
-                  gutterBottom
-                >
-                  Selamat Datang di Ujian Ini
-                </SoftTypography>
-                
-                <SoftTypography 
-                  variant="body1" 
-                  color="text" 
-                  textAlign="center"
-                  sx={{ maxWidth: "600px", mx: "auto", mb: 4 }}
-                >
-                  Sebelum memulai, pastikan Anda telah membaca seluruh instruksi
-                  dengan baik. Kerjakan setiap soal dengan teliti dan sesuai dengan
-                  kemampuan Anda. Pastikan untuk mengakhiri sebelum waktu habis.
-                </SoftTypography>
-
-                {/* Warning Alert */}
-                <Alert 
-                  severity="warning" 
-                  sx={{ 
-                    mb: 4,
-                    borderRadius: "10px",
-                    "& .MuiAlert-icon": {
-                      fontSize: "2rem",
-                    },
-                  }}
-                >
-                  <AlertTitle sx={{ fontWeight: "bold", fontSize: "1.1rem" }}>
-                    <Warning sx={{ mr: 1, verticalAlign: "middle" }} />
-                    PERINGATAN PENTING
-                  </AlertTitle>
+      <Container maxWidth="xl" sx={{ px: { xs: 2, sm: 3, md: 4 } }}>
+        <SoftBox mt={{ xs: 2, sm: 3, md: 4 }}>
+          <Grid container justifyContent="center">
+            <Grid item xs={12} md={11} lg={10} xl={8}>
+              {/* Header Card */}
+              <Card>
+                <SoftBox p={{ xs: 2, sm: 3 }}>
+                  <SoftTypography 
+                    variant={isMobile ? "h3" : "h2"} 
+                    fontWeight="bold" 
+                    color="info" 
+                    textGradient
+                    textAlign="center"
+                    gutterBottom
+                    sx={{ fontSize: { xs: "1.8rem", sm: "2.5rem", md: "3rem" } }}
+                  >
+                    Selamat Datang di Ujian Ini
+                  </SoftTypography>
                   
-                  <List>
-                    {/* One-way Test */}
-                    <ListItem alignItems="flex-start" sx={{ px: 0 }}>
-                      <ListItemIcon sx={{ minWidth: "40px" }}>
-                        <Lock color="error" />
-                      </ListItemIcon>
-                      <ListItemText
-                        primary={
-                          <SoftTypography variant="body2" fontWeight="bold" color="error">
-                            Tes ini bersifat one-way (satu arah)
-                          </SoftTypography>
-                        }
-                        secondary={
-                          <SoftTypography variant="caption" color="text">
-                            Anda tidak dapat mengulang atau kembali ke soal sebelumnya 
-                            setelah melanjutkan ke soal berikutnya. Pastikan untuk
-                            memeriksa jawaban Anda sebelum berpindah soal.
-                          </SoftTypography>
-                        }
-                      />
-                    </ListItem>
+                  <SoftTypography 
+                    variant="body1" 
+                    color="text" 
+                    textAlign="center"
+                    sx={{ 
+                      maxWidth: "600px", 
+                      mx: "auto", 
+                      mb: { xs: 3, sm: 4 },
+                      fontSize: { xs: "0.9rem", sm: "1rem" }
+                    }}
+                  >
+                    Sebelum memulai, pastikan Anda telah membaca seluruh instruksi
+                    dengan baik. Kerjakan setiap soal dengan teliti dan sesuai dengan
+                    kemampuan Anda. Pastikan untuk mengakhiri sebelum waktu habis.
+                  </SoftTypography>
 
-                    <Divider component="li" />
+                  {/* Warning Alert */}
+                  <Alert 
+                    severity="warning" 
+                    sx={{ 
+                      mb: { xs: 3, sm: 4 },
+                      borderRadius: "10px",
+                      "& .MuiAlert-icon": {
+                        fontSize: { xs: "1.5rem", sm: "2rem" },
+                      },
+                    }}
+                  >
+                    <AlertTitle sx={{ 
+                      fontWeight: "bold", 
+                      fontSize: { xs: "1rem", sm: "1.1rem" },
+                      display: "flex",
+                      alignItems: "center",
+                    }}>
+                      <Warning sx={{ mr: 1, fontSize: { xs: 20, sm: 24 } }} />
+                      PERINGATAN PENTING
+                    </AlertTitle>
+                    
+                    <List sx={{ p: 0 }}>
+                      {/* One-way Test */}
+                      <ListItem alignItems="flex-start" sx={{ px: 0, py: 1 }}>
+                        <ListItemIcon sx={{ minWidth: { xs: "36px", sm: "40px" } }}>
+                          <Lock color="error" sx={{ fontSize: { xs: 20, sm: 24 } }} />
+                        </ListItemIcon>
+                        <ListItemText
+                          primary={
+                            <SoftTypography 
+                              variant="body2" 
+                              fontWeight="bold" 
+                              color="error"
+                              sx={{ fontSize: { xs: "0.85rem", sm: "0.9rem" } }}
+                            >
+                              Tes ini bersifat one-way (satu arah)
+                            </SoftTypography>
+                          }
+                          secondary={
+                            <SoftTypography 
+                              variant="caption" 
+                              color="text"
+                              sx={{ 
+                                fontSize: { xs: "0.7rem", sm: "0.75rem" },
+                                display: "block",
+                                mt: 0.5
+                              }}
+                            >
+                              Anda tidak dapat mengulang atau kembali ke soal sebelumnya 
+                              setelah melanjutkan ke soal berikutnya. Pastikan untuk
+                              memeriksa jawaban Anda sebelum berpindah soal.
+                            </SoftTypography>
+                          }
+                        />
+                      </ListItem>
 
-                    {/* No Cheating */}
-                    <ListItem alignItems="flex-start" sx={{ px: 0 }}>
-                      <ListItemIcon sx={{ minWidth: "40px" }}>
-                        <Gavel color="error" />
-                      </ListItemIcon>
-                      <ListItemText
-                        primary={
-                          <SoftTypography variant="body2" fontWeight="bold" color="error">
-                            Dilarang keras melakukan kecurangan selama ujian berlangsung
-                          </SoftTypography>
-                        }
-                        secondary={
-                          <SoftTypography variant="caption" color="text">
-                            Jika sistem mendeteksi aktivitas mencurigakan seperti{" "}
-                            <strong>screenshoot, screen recording, atau berpindah tab/browser</strong>
-                            , ujian akan <strong>otomatis berakhir</strong> dan Anda
-                            akan <strong>terlogout</strong> dari sistem.
-                          </SoftTypography>
-                        }
-                      />
-                    </ListItem>
+                      <Divider component="li" />
 
-                    <Divider component="li" />
+                      {/* No Cheating */}
+                      <ListItem alignItems="flex-start" sx={{ px: 0, py: 1 }}>
+                        <ListItemIcon sx={{ minWidth: { xs: "36px", sm: "40px" } }}>
+                          <Gavel color="error" sx={{ fontSize: { xs: 20, sm: 24 } }} />
+                        </ListItemIcon>
+                        <ListItemText
+                          primary={
+                            <SoftTypography 
+                              variant="body2" 
+                              fontWeight="bold" 
+                              color="error"
+                              sx={{ fontSize: { xs: "0.85rem", sm: "0.9rem" } }}
+                            >
+                              Dilarang keras melakukan kecurangan selama ujian berlangsung
+                            </SoftTypography>
+                          }
+                          secondary={
+                            <SoftTypography 
+                              variant="caption" 
+                              color="text"
+                              sx={{ 
+                                fontSize: { xs: "0.7rem", sm: "0.75rem" },
+                                display: "block",
+                                mt: 0.5
+                              }}
+                            >
+                              Jika sistem mendeteksi aktivitas mencurigakan seperti{" "}
+                              <strong>screenshoot, screen recording, atau berpindah tab/browser</strong>
+                              , ujian akan <strong>otomatis berakhir</strong> dan Anda
+                              akan <strong>terlogout</strong> dari sistem.
+                            </SoftTypography>
+                          }
+                        />
+                      </ListItem>
 
-                    {/* Petunjuk Pengerjaan */}
-                    <ListItem alignItems="flex-start" sx={{ px: 0 }}>
-                      <ListItemIcon sx={{ minWidth: "40px" }}>
-                        <Info color="info" />
-                      </ListItemIcon>
-                      <ListItemText
-                        primary={
-                          <SoftTypography variant="body2" fontWeight="bold" color="info">
-                            Petunjuk Pengerjaan Soal
-                          </SoftTypography>
-                        }
-                        secondary={
-                          <SoftBox 
-                            mt={1}
+                      <Divider component="li" />
+
+                      {/* Petunjuk Pengerjaan */}
+                      <ListItem alignItems="flex-start" sx={{ px: 0, py: 1 }}>
+                        <ListItemIcon sx={{ minWidth: { xs: "36px", sm: "40px" } }}>
+                          <Info color="info" sx={{ fontSize: { xs: 20, sm: 24 } }} />
+                        </ListItemIcon>
+                        <ListItemText
+                          primary={
+                            <SoftTypography 
+                              variant="body2" 
+                              fontWeight="bold" 
+                              color="info"
+                              sx={{ fontSize: { xs: "0.85rem", sm: "0.9rem" } }}
+                            >
+                              Petunjuk Pengerjaan Soal
+                            </SoftTypography>
+                          }
+                          secondary={
+                            <SoftBox 
+                              mt={1}
+                              sx={{
+                                "& p": { 
+                                  margin: "0.5rem 0",
+                                  fontSize: { xs: "0.7rem", sm: "0.875rem" },
+                                  color: "text.secondary",
+                                },
+                                "& ul, & ol": {
+                                  paddingLeft: { xs: "1.2rem", sm: "1.5rem" },
+                                },
+                                "& li": {
+                                  fontSize: { xs: "0.7rem", sm: "0.875rem" },
+                                  color: "text.secondary",
+                                },
+                              }}
+                            >
+                              <div dangerouslySetInnerHTML={{ __html: instruksiTes }} />
+                            </SoftBox>
+                          }
+                        />
+                      </ListItem>
+                    </List>
+                  </Alert>
+
+                  {/* Additional Info */}
+                  <SoftBox 
+                    bgColor="#f8f9fa" 
+                    borderRadius="lg" 
+                    p={{ xs: 1.5, sm: 2 }} 
+                    mb={{ xs: 3, sm: 4 }}
+                    display="flex"
+                    alignItems="center"
+                    gap={2}
+                    sx={{ flexDirection: { xs: "column", sm: "row" } }}
+                  >
+                    <CheckCircle color="success" sx={{ fontSize: { xs: 24, sm: 28 } }} />
+                    <SoftTypography 
+                      variant="body2" 
+                      color="text"
+                      sx={{ 
+                        fontSize: { xs: "0.85rem", sm: "1rem" },
+                        textAlign: { xs: "center", sm: "left" }
+                      }}
+                    >
+                      Harap patuhi aturan ini untuk menjaga integritas ujian. 
+                      Selamat mengerjakan dan semoga sukses!
+                    </SoftTypography>
+                  </SoftBox>
+
+                  {/* Action Button */}
+                  <SoftBox display="flex" justifyContent={{ xs: "center", sm: "flex-end" }}>
+                    <SoftButton
+                      variant="gradient"
+                      color="success"
+                      size={isMobile ? "medium" : "large"}
+                      onClick={handleMulai}
+                      disabled={loading}
+                      endIcon={<ArrowForward />}
+                      fullWidth={isMobile}
+                      sx={{ 
+                        minWidth: { xs: "100%", sm: "200px" },
+                        fontSize: { xs: "0.9rem", sm: "1rem" },
+                        py: { xs: 1.2, sm: 1.5 }
+                      }}
+                    >
+                      {loading ? (
+                        <SoftBox display="flex" alignItems="center" justifyContent="center">
+                          <SoftBox
+                            component="span"
                             sx={{
-                              "& p": { 
-                                margin: "0.5rem 0",
-                                fontSize: "0.875rem",
-                                color: "text.secondary",
-                              },
-                              "& ul, & ol": {
-                                paddingLeft: "1.5rem",
-                              },
-                              "& li": {
-                                fontSize: "0.875rem",
-                                color: "text.secondary",
+                              width: { xs: 16, sm: 20 },
+                              height: { xs: 16, sm: 20 },
+                              borderRadius: "50%",
+                              border: "2px solid",
+                              borderColor: "white",
+                              borderTopColor: "transparent",
+                              animation: "spin 1s linear infinite",
+                              mr: 1,
+                              "@keyframes spin": {
+                                "0%": { transform: "rotate(0deg)" },
+                                "100%": { transform: "rotate(360deg)" },
                               },
                             }}
-                          >
-                            <div dangerouslySetInnerHTML={{ __html: instruksiTes }} />
-                          </SoftBox>
-                        }
-                      />
-                    </ListItem>
-                  </List>
-                </Alert>
-
-                {/* Additional Info */}
-                <SoftBox 
-                  bgColor="#f8f9fa" 
-                  borderRadius="lg" 
-                  p={2} 
-                  mb={4}
-                  display="flex"
-                  alignItems="center"
-                  gap={2}
-                >
-                  <CheckCircle color="success" />
-                  <SoftTypography variant="body2" color="text">
-                    Harap patuhi aturan ini untuk menjaga integritas ujian. 
-                    Selamat mengerjakan dan semoga sukses!
-                  </SoftTypography>
+                          />
+                          Memulai...
+                        </SoftBox>
+                      ) : (
+                        "Mulai Ujian"
+                      )}
+                    </SoftButton>
+                  </SoftBox>
                 </SoftBox>
-
-                {/* Action Button */}
-                <SoftBox display="flex" justifyContent="flex-end">
-                  <SoftButton
-                    variant="gradient"
-                    color="success"
-                    size="large"
-                    onClick={handleMulai}
-                    disabled={loading}
-                    endIcon={<ArrowForward />}
-                    sx={{ minWidth: "200px" }}
-                  >
-                    {loading ? (
-                      <SoftBox display="flex" alignItems="center" justifyContent="center">
-                        <SoftBox
-                          component="span"
-                          sx={{
-                            width: 20,
-                            height: 20,
-                            borderRadius: "50%",
-                            border: "2px solid",
-                            borderColor: "white",
-                            borderTopColor: "transparent",
-                            animation: "spin 1s linear infinite",
-                            mr: 2,
-                            "@keyframes spin": {
-                              "0%": { transform: "rotate(0deg)" },
-                              "100%": { transform: "rotate(360deg)" },
-                            },
-                          }}
-                        />
-                        Memulai...
-                      </SoftBox>
-                    ) : (
-                      "Mulai Ujian"
-                    )}
-                  </SoftButton>
-                </SoftBox>
-              </SoftBox>
-            </Card>
+              </Card>
+            </Grid>
           </Grid>
-        </Grid>
-      </SoftBox>
+        </SoftBox>
+      </Container>
 
       <Footer />
     </DashboardLayout>

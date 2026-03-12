@@ -9,8 +9,10 @@ import Card from "@mui/material/Card";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import FormHelperText from "@mui/material/FormHelperText";
+import InputAdornment from "@mui/material/InputAdornment";
+import Container from "@mui/material/Container";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTheme } from "@mui/material/styles";
 
 // Soft UI Dashboard React components
 import SoftBox from "components/SoftBox";
@@ -40,6 +42,11 @@ function Biodata() {
 
   const [listPangkat, setListPangkat] = useState([]);
   const [backgroundImage, setBackgroundImage] = useState("");
+
+  // Hook untuk responsive
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
 
   useEffect(() => {
     const fetchBiodata = async () => {
@@ -181,247 +188,323 @@ function Biodata() {
   };
 
   return (
-    <CoverLayout
-      image={backgroundImage}
-      color="white"
-    >
-      <SoftBox textAlign="center">
-        {/* Logo Header */}
-        <SoftBox display="flex" justifyContent="center" mb={4} gap={3}>
-          <SoftBox
-            component="img"
-            src={PoldaLogo}
-            alt="Polda Logo"
-            width="55px"
-            height="55px"
-            sx={{ objectFit: "contain" }}
-          />
-          <SoftBox
-            component="img"
-            src={SDMLogo}
-            alt="SDM Logo"
-            width="55px"
-            height="55px"
-            sx={{ objectFit: "contain" }}
-          />
-          <SoftBox
-            component="img"
-            src={PsikologiLogo}
-            alt="Psikologi Logo"
-            width="65px"
-            height="55px"
-            sx={{ objectFit: "contain" }}
-          />
+    <CoverLayout image={backgroundImage}>
+      <Container maxWidth="md" sx={{ px: { xs: 2, sm: 3 } }}>
+        <SoftBox 
+          bgColor="white" 
+          borderRadius="lg" 
+          shadow="lg" 
+          p={{ xs: 2, sm: 3, md: 4 }}
+        >
+          <SoftBox textAlign="center">
+            {/* Logo Header */}
+            <SoftBox 
+              display="flex" 
+              justifyContent="center" 
+              mb={{ xs: 3, sm: 4 }} 
+              gap={{ xs: 2, sm: 3 }}
+            >
+              <SoftBox
+                component="img"
+                src={PoldaLogo}
+                alt="Polda Logo"
+                width={{ xs: "45px", sm: "55px" }}
+                height={{ xs: "45px", sm: "55px" }}
+                sx={{ objectFit: "contain" }}
+              />
+              <SoftBox
+                component="img"
+                src={SDMLogo}
+                alt="SDM Logo"
+                width={{ xs: "45px", sm: "55px" }}
+                height={{ xs: "45px", sm: "55px" }}
+                sx={{ objectFit: "contain" }}
+              />
+              <SoftBox
+                component="img"
+                src={PsikologiLogo}
+                alt="Psikologi Logo"
+                width={{ xs: "55px", sm: "65px" }}
+                height={{ xs: "45px", sm: "55px" }}
+                sx={{ objectFit: "contain" }}
+              />
+            </SoftBox>
+
+            {/* Title */}
+            <SoftTypography 
+              variant={isMobile ? "h5" : "h4"} 
+              fontWeight="bold" 
+              color="info" 
+              gutterBottom
+            >
+              Biodata Peserta
+            </SoftTypography>
+            <SoftTypography 
+              variant="body2" 
+              color="text" 
+              mb={{ xs: 3, sm: 4 }}
+              sx={{ fontSize: { xs: "0.8rem", sm: "0.875rem" } }}
+            >
+              Lengkapi data diri Anda untuk melanjutkan
+            </SoftTypography>
+
+            {/* Form Biodata */}
+            <SoftBox component="form" role="form" onSubmit={handleSubmit}>
+              <Grid container spacing={{ xs: 2, sm: 3 }}>
+                {/* Nama Lengkap */}
+                <Grid item xs={12}>
+                  <SoftBox textAlign="left">
+                    <SoftTypography
+                      component="label"
+                      variant="caption"
+                      fontWeight="bold"
+                      color="text"
+                      display="block"
+                      mb={0.5}
+                      sx={{ fontSize: { xs: "0.7rem", sm: "0.75rem" } }}
+                    >
+                      Nama Lengkap
+                    </SoftTypography>
+                    <SoftInput
+                      type="text"
+                      placeholder="Masukkan nama lengkap anda"
+                      value={nama_lengkap}
+                      onChange={(e) => setNamaLengkap(e.target.value)}
+                      required
+                      fullWidth
+                      size={isMobile ? "small" : "medium"}
+                      sx={{
+                        "& .MuiInputBase-input": {
+                          fontSize: { xs: "0.9rem", sm: "1rem" },
+                        },
+                      }}
+                    />
+                  </SoftBox>
+                </Grid>
+
+                {/* Pangkat dengan Material-UI Select */}
+                <Grid item xs={12} md={6}>
+                  <SoftBox textAlign="left">
+                    <SoftTypography
+                      component="label"
+                      variant="caption"
+                      fontWeight="bold"
+                      color="text"
+                      display="block"
+                      mb={0.5}
+                      sx={{ fontSize: { xs: "0.7rem", sm: "0.75rem" } }}
+                    >
+                      Pangkat
+                    </SoftTypography>
+                    <FormControl fullWidth required size={isMobile ? "small" : "medium"}>
+                      <Select
+                        value={pangkat}
+                        onChange={(e) => setPangkat(e.target.value)}
+                        displayEmpty
+                        sx={{
+                          borderRadius: "8px",
+                          bgcolor: "#f8f9fa",
+                          height: isMobile ? "40px" : "44px",
+                          fontSize: { xs: "0.9rem", sm: "1rem" },
+                          "& .MuiOutlinedInput-notchedOutline": {
+                            borderColor: "#e9ecef",
+                          },
+                          "&:hover .MuiOutlinedInput-notchedOutline": {
+                            borderColor: "#cb0c9f",
+                          },
+                          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                            borderColor: "#cb0c9f",
+                          },
+                        }}
+                      >
+                        <MenuItem value="" disabled>
+                          <em>Pilih pangkat</em>
+                        </MenuItem>
+                        {listPangkat.map((item) => (
+                          <MenuItem key={item.id} value={item.id}>
+                            {item.nama_pangkat}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </SoftBox>
+                </Grid>
+
+                {/* NRP */}
+                <Grid item xs={12} md={6}>
+                  <SoftBox textAlign="left">
+                    <SoftTypography
+                      component="label"
+                      variant="caption"
+                      fontWeight="bold"
+                      color="text"
+                      display="block"
+                      mb={0.5}
+                      sx={{ fontSize: { xs: "0.7rem", sm: "0.75rem" } }}
+                    >
+                      NRP
+                    </SoftTypography>
+                    <SoftInput
+                      type="text"
+                      placeholder="Masukkan NRP anda"
+                      value={nrp}
+                      onChange={(e) => {
+                        const newValue = e.target.value.replace(/\D/g, "");
+                        setNrp(newValue);
+                      }}
+                      required
+                      fullWidth
+                      size={isMobile ? "small" : "medium"}
+                      sx={{
+                        "& .MuiInputBase-input": {
+                          fontSize: { xs: "0.9rem", sm: "1rem" },
+                        },
+                      }}
+                    />
+                  </SoftBox>
+                </Grid>
+
+                {/* Jabatan */}
+                <Grid item xs={12} md={6}>
+                  <SoftBox textAlign="left">
+                    <SoftTypography
+                      component="label"
+                      variant="caption"
+                      fontWeight="bold"
+                      color="text"
+                      display="block"
+                      mb={0.5}
+                      sx={{ fontSize: { xs: "0.7rem", sm: "0.75rem" } }}
+                    >
+                      Jabatan
+                    </SoftTypography>
+                    <SoftInput
+                      type="text"
+                      placeholder="Masukkan jabatan anda"
+                      value={jabatan}
+                      onChange={(e) => setJabatan(e.target.value.toUpperCase())}
+                      required
+                      fullWidth
+                      size={isMobile ? "small" : "medium"}
+                      sx={{
+                        "& .MuiInputBase-input": {
+                          fontSize: { xs: "0.9rem", sm: "1rem" },
+                        },
+                      }}
+                    />
+                  </SoftBox>
+                </Grid>
+
+                {/* Kesatuan (Read Only) */}
+                <Grid item xs={12} md={6}>
+                  <SoftBox textAlign="left">
+                    <SoftTypography
+                      component="label"
+                      variant="caption"
+                      fontWeight="bold"
+                      color="text"
+                      display="block"
+                      mb={0.5}
+                      sx={{ fontSize: { xs: "0.7rem", sm: "0.75rem" } }}
+                    >
+                      Kesatuan
+                    </SoftTypography>
+                    <SoftInput
+                      type="text"
+                      value={kesatuan}
+                      disabled
+                      fullWidth
+                      size={isMobile ? "small" : "medium"}
+                      sx={{ 
+                        bgcolor: "#f5f5f5",
+                        "& .MuiInputBase-input": {
+                          fontSize: { xs: "0.9rem", sm: "1rem" },
+                        },
+                      }}
+                    />
+                  </SoftBox>
+                </Grid>
+
+                {/* Alamat */}
+                <Grid item xs={12}>
+                  <SoftBox textAlign="left">
+                    <SoftTypography
+                      component="label"
+                      variant="caption"
+                      fontWeight="bold"
+                      color="text"
+                      display="block"
+                      mb={0.5}
+                      sx={{ fontSize: { xs: "0.7rem", sm: "0.75rem" } }}
+                    >
+                      Alamat
+                    </SoftTypography>
+                    <SoftInput
+                      multiline
+                      rows={isMobile ? 2 : 3}
+                      placeholder="Masukkan alamat anda"
+                      value={alamat}
+                      onChange={(e) => setAlamat(e.target.value)}
+                      required
+                      fullWidth
+                      size={isMobile ? "small" : "medium"}
+                      sx={{
+                        "& .MuiInputBase-root": {
+                          padding: "10px 14px",
+                        },
+                        "& .MuiInputBase-input": {
+                          fontSize: { xs: "0.9rem", sm: "1rem" },
+                        },
+                      }}
+                    />
+                  </SoftBox>
+                </Grid>
+
+                {/* Submit Button */}
+                <Grid item xs={12}>
+                  <SoftButton
+                    type="submit"
+                    variant="gradient"
+                    color="info"
+                    fullWidth
+                    disabled={loading}
+                    size={isMobile ? "medium" : "large"}
+                    sx={{
+                      py: { xs: 1.2, sm: 1.5 },
+                      fontSize: { xs: "0.9rem", sm: "1rem" },
+                    }}
+                  >
+                    {loading ? (
+                      <SoftBox display="flex" alignItems="center" justifyContent="center">
+                        <SoftBox
+                          component="span"
+                          sx={{
+                            width: { xs: 16, sm: 20 },
+                            height: { xs: 16, sm: 20 },
+                            borderRadius: "50%",
+                            border: "2px solid",
+                            borderColor: "white",
+                            borderTopColor: "transparent",
+                            animation: "spin 1s linear infinite",
+                            mr: 1,
+                            "@keyframes spin": {
+                              "0%": { transform: "rotate(0deg)" },
+                              "100%": { transform: "rotate(360deg)" },
+                            },
+                          }}
+                        />
+                        Memproses...
+                      </SoftBox>
+                    ) : (
+                      "Submit"
+                    )}
+                  </SoftButton>
+                </Grid>
+              </Grid>
+            </SoftBox>
+          </SoftBox>
         </SoftBox>
-
-        {/* Title */}
-        <SoftTypography variant="h4" fontWeight="bold" color="info" gutterBottom>
-          Biodata Peserta
-        </SoftTypography>
-        <SoftTypography variant="body2" color="text" mb={4}>
-          Lengkapi data diri Anda untuk melanjutkan
-        </SoftTypography>
-
-        {/* Form Biodata */}
-        <SoftBox component="form" role="form" onSubmit={handleSubmit}>
-          {/* Nama Lengkap */}
-          <SoftBox mb={3} textAlign="left">
-            <SoftTypography
-              component="label"
-              variant="caption"
-              fontWeight="bold"
-              color="text"
-              display="block"
-              mb={1}
-            >
-              Nama Lengkap
-            </SoftTypography>
-            <SoftInput
-              type="text"
-              placeholder="Masukkan nama lengkap anda"
-              value={nama_lengkap}
-              onChange={(e) => setNamaLengkap(e.target.value)}
-              required
-              fullWidth
-            />
-          </SoftBox>
-
-          {/* Pangkat dengan Material-UI Select */}
-          <SoftBox mb={3} textAlign="left">
-            <SoftTypography
-              component="label"
-              variant="caption"
-              fontWeight="bold"
-              color="text"
-              display="block"
-              mb={1}
-            >
-              Pangkat
-            </SoftTypography>
-            <FormControl fullWidth required size="small">
-              <Select
-                value={pangkat}
-                onChange={(e) => setPangkat(e.target.value)}
-                displayEmpty
-                sx={{
-                  borderRadius: "8px",
-                  bgcolor: "#f8f9fa",
-                  height: "44px",
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#e9ecef",
-                  },
-                  "&:hover .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#cb0c9f",
-                  },
-                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#cb0c9f",
-                  },
-                }}
-              >
-                <MenuItem value="" disabled>
-                  <em>Pilih pangkat</em>
-                </MenuItem>
-                {listPangkat.map((item) => (
-                  <MenuItem key={item.id} value={item.id}>
-                    {item.nama_pangkat}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </SoftBox>
-
-          {/* NRP */}
-          <SoftBox mb={3} textAlign="left">
-            <SoftTypography
-              component="label"
-              variant="caption"
-              fontWeight="bold"
-              color="text"
-              display="block"
-              mb={1}
-            >
-              NRP
-            </SoftTypography>
-            <SoftInput
-              type="text"
-              placeholder="Masukkan NRP anda"
-              value={nrp}
-              onChange={(e) => {
-                const newValue = e.target.value.replace(/\D/g, "");
-                setNrp(newValue);
-              }}
-              required
-              fullWidth
-            />
-          </SoftBox>
-
-          {/* Jabatan */}
-          <SoftBox mb={3} textAlign="left">
-            <SoftTypography
-              component="label"
-              variant="caption"
-              fontWeight="bold"
-              color="text"
-              display="block"
-              mb={1}
-            >
-              Jabatan
-            </SoftTypography>
-            <SoftInput
-              type="text"
-              placeholder="Masukkan jabatan anda"
-              value={jabatan}
-              onChange={(e) => setJabatan(e.target.value.toUpperCase())}
-              required
-              fullWidth
-            />
-          </SoftBox>
-
-          {/* Kesatuan (Read Only) */}
-          <SoftBox mb={3} textAlign="left">
-            <SoftTypography
-              component="label"
-              variant="caption"
-              fontWeight="bold"
-              color="text"
-              display="block"
-              mb={1}
-            >
-              Kesatuan
-            </SoftTypography>
-            <SoftInput
-              type="text"
-              value={kesatuan}
-              disabled
-              fullWidth
-              sx={{ bgcolor: "#f5f5f5" }}
-            />
-          </SoftBox>
-
-          {/* Alamat */}
-          <SoftBox mb={4} textAlign="left">
-            <SoftTypography
-              component="label"
-              variant="caption"
-              fontWeight="bold"
-              color="text"
-              display="block"
-              mb={1}
-            >
-              Alamat
-            </SoftTypography>
-            <SoftInput
-              multiline
-              rows={3}
-              placeholder="Masukkan alamat anda"
-              value={alamat}
-              onChange={(e) => setAlamat(e.target.value)}
-              required
-              fullWidth
-              sx={{
-                "& .MuiInputBase-root": {
-                  padding: "10px 14px",
-                },
-              }}
-            />
-          </SoftBox>
-
-          {/* Submit Button */}
-          <SoftButton
-            type="submit"
-            variant="gradient"
-            color="info"
-            fullWidth
-            disabled={loading}
-            size="large"
-          >
-            {loading ? (
-              <SoftBox display="flex" alignItems="center" justifyContent="center">
-                <SoftBox
-                  component="span"
-                  sx={{
-                    width: 20,
-                    height: 20,
-                    borderRadius: "50%",
-                    border: "2px solid",
-                    borderColor: "white",
-                    borderTopColor: "transparent",
-                    animation: "spin 1s linear infinite",
-                    mr: 2,
-                    "@keyframes spin": {
-                      "0%": { transform: "rotate(0deg)" },
-                      "100%": { transform: "rotate(360deg)" },
-                    },
-                  }}
-                />
-                Memproses...
-              </SoftBox>
-            ) : (
-              "Submit"
-            )}
-          </SoftButton>
-        </SoftBox>
-      </SoftBox>
+      </Container>
     </CoverLayout>
   );
 }

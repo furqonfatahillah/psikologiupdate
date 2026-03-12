@@ -10,6 +10,9 @@ import Modal from "@mui/material/Modal";
 import Icon from "@mui/material/Icon";
 import Badge from "@mui/material/Badge";
 import Divider from "@mui/material/Divider";
+import Container from "@mui/material/Container";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTheme } from "@mui/material/styles";
 
 // Icons
 import {
@@ -51,6 +54,11 @@ const RiwayatTes = () => {
   const [error, setError] = useState(null);
   const [selectedTest, setSelectedTest] = useState(null);
   const [biodata, setBiodata] = useState(null);
+  
+  // Hook untuk responsive
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
   
   const token = sessionStorage.getItem("token");
   if (!token) {
@@ -157,11 +165,13 @@ const RiwayatTes = () => {
     return (
       <DashboardLayout>
         <DashboardNavbar />
-        <SoftBox display="flex" justifyContent="center" alignItems="center" minHeight="50vh">
-          <SoftTypography variant="h5" color="text">
-            Loading...
-          </SoftTypography>
-        </SoftBox>
+        <Container maxWidth="xl">
+          <SoftBox display="flex" justifyContent="center" alignItems="center" minHeight="50vh">
+            <SoftTypography variant={isMobile ? "h6" : "h5"} color="text">
+              Loading...
+            </SoftTypography>
+          </SoftBox>
+        </Container>
         <Footer />
       </DashboardLayout>
     );
@@ -171,11 +181,13 @@ const RiwayatTes = () => {
     return (
       <DashboardLayout>
         <DashboardNavbar />
-        <SoftBox display="flex" justifyContent="center" alignItems="center" minHeight="50vh">
-          <SoftTypography variant="h5" color="error">
-            Error: {error}
-          </SoftTypography>
-        </SoftBox>
+        <Container maxWidth="xl">
+          <SoftBox display="flex" justifyContent="center" alignItems="center" minHeight="50vh">
+            <SoftTypography variant={isMobile ? "h6" : "h5"} color="error">
+              Error: {error}
+            </SoftTypography>
+          </SoftBox>
+        </Container>
         <Footer />
       </DashboardLayout>
     );
@@ -185,118 +197,134 @@ const RiwayatTes = () => {
     <DashboardLayout>
       <DashboardNavbar />
       
-      <SoftBox mt={4}>
-        {/* Header Section */}
-        <SoftBox mb={4}>
-          <SoftTypography variant="h3" fontWeight="bold" color="info" gutterBottom>
-            Riwayat Tes
-          </SoftTypography>
-          <SoftTypography variant="body2" color="text">
-            Daftar tes yang telah Anda kerjakan
-          </SoftTypography>
-        </SoftBox>
+      <Container maxWidth="xl" sx={{ px: { xs: 2, sm: 3, md: 4 } }}>
+        <SoftBox mt={{ xs: 2, sm: 3, md: 4 }}>
+          {/* Header Section */}
+          <SoftBox mb={{ xs: 3, sm: 4 }}>
+            <SoftTypography 
+              variant={isMobile ? "h4" : "h3"} 
+              fontWeight="bold" 
+              color="info" 
+              gutterBottom
+              sx={{ fontSize: { xs: "1.5rem", sm: "2rem", md: "2.5rem" } }}
+            >
+              Riwayat Tes
+            </SoftTypography>
+            <SoftTypography variant="body2" color="text">
+              Daftar tes yang telah Anda kerjakan
+            </SoftTypography>
+          </SoftBox>
 
-        {/* Test List Section */}
-        {testResults.length > 0 ? (
-          <Grid container spacing={3}>
-            {testResults.map((test) => (
-              <Grid item xs={12} key={test.id}>
-                <SoftBox
-                  onClick={() => handleTestClick(test)}
-                  sx={{ cursor: "pointer" }}
-                >
-                  <Card
-                    sx={{
-                      transition: "all 0.3s ease",
-                      "&:hover": {
-                        transform: "translateY(-2px)",
-                        boxShadow: "0 10px 30px rgba(0,0,0,0.1)",
-                      },
-                    }}
+          {/* Test List Section */}
+          {testResults.length > 0 ? (
+            <Grid container spacing={{ xs: 2, sm: 3 }}>
+              {testResults.map((test) => (
+                <Grid item xs={12} key={test.id}>
+                  <SoftBox
+                    onClick={() => handleTestClick(test)}
+                    sx={{ cursor: "pointer" }}
                   >
-                    <SoftBox p={3}>
-                      <Grid container alignItems="center" spacing={2}>
-                        <Grid item xs={12} md={8}>
-                          <SoftBox display="flex" alignItems="center" flexWrap="wrap" gap={1} mb={1}>
-                            <SoftTypography variant="h5" fontWeight="bold" color="info">
-                              {test.kategoriTes || "N/A"}
-                            </SoftTypography>
-                            <Badge
-                              color={getStatusColor(test.status)}
-                              badgeContent={getStatusText(test.status)}
-                              sx={{
-                                "& .MuiBadge-badge": {
-                                  fontSize: "0.7rem",
-                                  height: "20px",
-                                  minWidth: "80px",
-                                  borderRadius: "10px",
-                                },
-                              }}
-                            />
-                          </SoftBox>
-
-                          <SoftBox display="flex" alignItems="center" flexWrap="wrap" gap={2}>
-                            <SoftBox display="flex" alignItems="center">
-                              <Event sx={{ fontSize: 16, color: "#6c757d", mr: 0.5 }} />
-                              <SoftTypography variant="caption" color="text">
-                                {test.finishedAt
-                                  ? new Date(test.finishedAt).toLocaleDateString("id-ID", {
-                                      day: "numeric",
-                                      month: "long",
-                                      year: "numeric",
-                                    })
-                                  : "N/A"}
+                    <Card
+                      sx={{
+                        transition: "all 0.3s ease",
+                        "&:hover": {
+                          transform: "translateY(-2px)",
+                          boxShadow: "0 10px 30px rgba(0,0,0,0.1)",
+                        },
+                      }}
+                    >
+                      <SoftBox p={{ xs: 2, sm: 3 }}>
+                        <Grid container alignItems="center" spacing={2}>
+                          <Grid item xs={12} md={8}>
+                            <SoftBox display="flex" alignItems="center" flexWrap="wrap" gap={1} mb={1}>
+                              <SoftTypography 
+                                variant={isMobile ? "body1" : "h5"} 
+                                fontWeight="bold" 
+                                color="info"
+                                sx={{ fontSize: { xs: "1rem", sm: "1.25rem", md: "1.5rem" } }}
+                              >
+                                {test.kategoriTes || "N/A"}
                               </SoftTypography>
+                              <Badge
+                                color={getStatusColor(test.status)}
+                                badgeContent={getStatusText(test.status)}
+                                sx={{
+                                  "& .MuiBadge-badge": {
+                                    fontSize: { xs: "0.6rem", sm: "0.7rem" },
+                                    height: { xs: "18px", sm: "20px" },
+                                    minWidth: { xs: "70px", sm: "80px" },
+                                    borderRadius: "10px",
+                                    position: "relative",
+                                    transform: "none",
+                                  },
+                                }}
+                              />
                             </SoftBox>
 
-                            {test.finishedAt && (
+                            <SoftBox display="flex" alignItems="center" flexWrap="wrap" gap={{ xs: 1, sm: 2 }}>
                               <SoftBox display="flex" alignItems="center">
-                                <AccessTime sx={{ fontSize: 16, color: "#6c757d", mr: 0.5 }} />
-                                <SoftTypography variant="caption" color="text">
-                                  {new Date(test.finishedAt).toLocaleTimeString("id-ID", {
-                                    hour: "2-digit",
-                                    minute: "2-digit",
-                                    hour12: false,
-                                  })}
+                                <Event sx={{ fontSize: { xs: 14, sm: 16 }, color: "#6c757d", mr: 0.5 }} />
+                                <SoftTypography variant="caption" color="text" sx={{ fontSize: { xs: "0.65rem", sm: "0.75rem" } }}>
+                                  {test.finishedAt
+                                    ? new Date(test.finishedAt).toLocaleDateString("id-ID", {
+                                        day: "numeric",
+                                        month: "long",
+                                        year: "numeric",
+                                      })
+                                    : "N/A"}
                                 </SoftTypography>
                               </SoftBox>
-                            )}
-                          </SoftBox>
-                        </Grid>
 
-                        <Grid item xs={12} md={4}>
-                          <SoftBox display="flex" justifyContent={{ xs: "flex-start", md: "flex-end" }}>
-                            <SoftButton
-                              variant="text"
-                              color="info"
-                              size="small"
-                              endIcon={<Visibility />}
-                            >
-                              Lihat Detail
-                            </SoftButton>
-                          </SoftBox>
+                              {test.finishedAt && (
+                                <SoftBox display="flex" alignItems="center">
+                                  <AccessTime sx={{ fontSize: { xs: 14, sm: 16 }, color: "#6c757d", mr: 0.5 }} />
+                                  <SoftTypography variant="caption" color="text" sx={{ fontSize: { xs: "0.65rem", sm: "0.75rem" } }}>
+                                    {new Date(test.finishedAt).toLocaleTimeString("id-ID", {
+                                      hour: "2-digit",
+                                      minute: "2-digit",
+                                      hour12: false,
+                                    })}
+                                  </SoftTypography>
+                                </SoftBox>
+                              )}
+                            </SoftBox>
+                          </Grid>
+
+                          <Grid item xs={12} md={4}>
+                            <SoftBox display="flex" justifyContent={{ xs: "flex-start", md: "flex-end" }}>
+                              <SoftButton
+                                variant="text"
+                                color="info"
+                                size={isMobile ? "small" : "medium"}
+                                endIcon={<Visibility />}
+                                sx={{ fontSize: { xs: "0.75rem", sm: "0.875rem" } }}
+                              >
+                                Lihat Detail
+                              </SoftButton>
+                            </SoftBox>
+                          </Grid>
                         </Grid>
-                      </Grid>
-                    </SoftBox>
-                  </Card>
-                </SoftBox>
-              </Grid>
-            ))}
-          </Grid>
-        ) : (
-          <Card>
-            <SoftBox p={5} textAlign="center">
-              <Description sx={{ fontSize: 60, color: "#6c757d", mb: 2 }} />
-              <SoftTypography variant="h5" color="text" gutterBottom>
-                Tidak ada riwayat tes
-              </SoftTypography>
-              <SoftTypography variant="body2" color="text">
-                Anda belum mengerjakan tes apapun
-              </SoftTypography>
-            </SoftBox>
-          </Card>
-        )}
-      </SoftBox>
+                      </SoftBox>
+                    </Card>
+                  </SoftBox>
+                </Grid>
+              ))}
+            </Grid>
+          ) : (
+            <Card>
+              <SoftBox p={{ xs: 3, sm: 5 }} textAlign="center">
+                <Description sx={{ fontSize: { xs: 40, sm: 60 }, color: "#6c757d", mb: 2 }} />
+                <SoftTypography variant={isMobile ? "h6" : "h5"} color="text" gutterBottom>
+                  Tidak ada riwayat tes
+                </SoftTypography>
+                <SoftTypography variant="body2" color="text">
+                  Anda belum mengerjakan tes apapun
+                </SoftTypography>
+              </SoftBox>
+            </Card>
+          )}
+        </SoftBox>
+      </Container>
 
       {/* Detail Modal */}
       <Modal
@@ -308,22 +336,29 @@ const RiwayatTes = () => {
           position="absolute"
           top="50%"
           left="50%"
-          sx={{ transform: "translate(-50%, -50%)" }}
-          width={{ xs: "90%", sm: 800 }}
+          sx={{ transform: "translate(-50%, -50%)", overflowY: "auto",
+            maxHeight: "90vh", }}
+          width={{ xs: "95%", sm: "90%", md: 800 }}
+          maxHeight={{ xs: "90vh", sm: "auto" }}
+
         >
           <Card>
-            <SoftBox p={3}>
+            <SoftBox p={{ xs: 2, sm: 3 }}>
               {/* Modal Header */}
-              <SoftBox display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-                <SoftTypography variant="h5" fontWeight="bold" color="info">
+              <SoftBox display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+                <SoftTypography 
+                  variant={isMobile ? "h6" : "h5"} 
+                  fontWeight="bold" 
+                  color="info"
+                >
                   Detail Hasil Tes
                 </SoftTypography>
-                <SoftButton variant="text" color="dark" onClick={closeModal}>
+                <SoftButton variant="text" color="dark" onClick={closeModal} size="small">
                   <Close />
                 </SoftButton>
               </SoftBox>
 
-              <Grid container spacing={3}>
+              <Grid container spacing={{ xs: 2, sm: 3 }}>
                 {/* Kolom Kiri - Biodata */}
                 <Grid item xs={12} md={6}>
                   <SoftTypography variant="h6" fontWeight="medium" color="info" mb={2}>
@@ -337,7 +372,7 @@ const RiwayatTes = () => {
                         Nama Lengkap
                       </SoftTypography>
                     </SoftBox>
-                    <SoftTypography variant="body2" pl={3.5}>
+                    <SoftTypography variant="body2" pl={3.5} sx={{ wordBreak: "break-word" }}>
                       {biodata?.nama_lengkap || "Tidak tersedia"}
                     </SoftTypography>
                   </SoftBox>
@@ -476,9 +511,9 @@ const RiwayatTes = () => {
                             badgeContent={getStatusText(selectedTest.status)}
                             sx={{
                               "& .MuiBadge-badge": {
-                                fontSize: "0.75rem",
-                                height: "22px",
-                                minWidth: "90px",
+                                fontSize: { xs: "0.7rem", sm: "0.75rem" },
+                                height: { xs: "20px", sm: "22px" },
+                                minWidth: { xs: "80px", sm: "90px" },
                                 borderRadius: "11px",
                                 position: "relative",
                                 transform: "none",
@@ -492,7 +527,7 @@ const RiwayatTes = () => {
                 </Grid>
               </Grid>
 
-              <Divider sx={{ my: 3 }} />
+              <Divider sx={{ my: { xs: 2, sm: 3 } }} />
 
               {/* Info Tambahan */}
               <Grid container spacing={2}>
@@ -500,7 +535,7 @@ const RiwayatTes = () => {
                   <SoftTypography variant="caption" fontWeight="bold" color="text" display="block" mb={0.5}>
                     Masa Berlaku
                   </SoftTypography>
-                  <SoftTypography variant="body2">
+                  <SoftTypography variant="body2" sx={{ wordBreak: "break-word" }}>
                     {selectedTest?.masa_berlaku || "Tidak tersedia"}
                   </SoftTypography>
                 </Grid>
@@ -509,7 +544,7 @@ const RiwayatTes = () => {
                   <SoftTypography variant="caption" fontWeight="bold" color="text" display="block" mb={0.5}>
                     Keterangan
                   </SoftTypography>
-                  <SoftTypography variant="body2">
+                  <SoftTypography variant="body2" sx={{ wordBreak: "break-word" }}>
                     {selectedTest?.keterangan || "Tidak tersedia"}
                   </SoftTypography>
                 </Grid>
@@ -517,7 +552,13 @@ const RiwayatTes = () => {
 
               {/* Modal Footer */}
               <SoftBox display="flex" justifyContent="flex-end" mt={3}>
-                <SoftButton variant="gradient" color="info" onClick={closeModal}>
+                <SoftButton 
+                  variant="gradient" 
+                  color="info" 
+                  onClick={closeModal}
+                  size={isMobile ? "small" : "medium"}
+                  fullWidth={isMobile}
+                >
                   Tutup
                 </SoftButton>
               </SoftBox>

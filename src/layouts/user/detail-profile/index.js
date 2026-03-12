@@ -11,15 +11,15 @@ import Modal from "@mui/material/Modal";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import Icon from "@mui/material/Icon";
+import Container from "@mui/material/Container";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTheme } from "@mui/material/styles";
 
 // Soft UI Dashboard React components
 import SoftBox from "components/SoftBox";
 import SoftTypography from "components/SoftTypography";
 import SoftInput from "components/SoftInput";
 import SoftButton from "components/SoftButton";
-// import SoftSelect from "components/SoftSelect"; // Jika ada, atau gunakan Select MUI
 
 // Soft UI Dashboard React examples
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
@@ -55,6 +55,11 @@ const DetailProfile = () => {
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [updatedBiodata, setUpdatedBiodata] = useState({});
   const [loading, setLoading] = useState(false);
+
+  // Hook untuk responsive
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
 
   const token = sessionStorage.getItem("token");
   if (!token) {
@@ -152,17 +157,6 @@ const DetailProfile = () => {
     fetchKesatuanPangkat();
   }, []);
 
-  // Format data untuk select
-  const pangkatOptions = pangkatList.map((item) => ({
-    value: item.id,
-    label: item.nama_pangkat,
-  }));
-
-  const kesatuanOptions = kesatuanList.map((item) => ({
-    value: item.id,
-    label: item.nama_kesatuan,
-  }));
-
   // Profile items configuration
   const profileItems = [
     {
@@ -207,149 +201,183 @@ const DetailProfile = () => {
     <DashboardLayout>
       <DashboardNavbar />
       
-      <SoftBox mt={4}>
-        <Grid container spacing={3}>
-          {/* Left Side - Profile Info */}
-          <Grid item xs={12} lg={8}>
-            <SoftBox mb={3}>
-              <SoftTypography variant="h3" fontWeight="bold" color="info" gutterBottom>
-                Profil Peserta
-              </SoftTypography>
-              <SoftBox
-                width="60px"
-                height="4px"
-                bgColor="info"
-                borderRadius="md"
-                mb={1}
-              />
-              <SoftTypography variant="body2" color="text">
-                Kelola informasi profil Anda
-              </SoftTypography>
-            </SoftBox>
+      <Container maxWidth="xl" sx={{ px: { xs: 2, sm: 3, md: 4 } }}>
+        <SoftBox mt={{ xs: 2, sm: 3, md: 4 }}>
+          <Grid container spacing={{ xs: 2, sm: 3 }}>
+            {/* Left Side - Profile Info */}
+            <Grid item xs={12} lg={8}>
+              <SoftBox mb={{ xs: 2, sm: 3 }}>
+                <SoftTypography 
+                  variant={isMobile ? "h4" : "h3"} 
+                  fontWeight="bold" 
+                  color="info" 
+                  gutterBottom
+                  sx={{ fontSize: { xs: "1.5rem", sm: "2rem", md: "2.5rem" } }}
+                >
+                  Profil Peserta
+                </SoftTypography>
+                <SoftBox
+                  width="60px"
+                  height="4px"
+                  bgColor="info"
+                  borderRadius="md"
+                  mb={1}
+                />
+                <SoftTypography variant="body2" color="text">
+                  Kelola informasi profil Anda
+                </SoftTypography>
+              </SoftBox>
 
-            <Card>
-              <SoftBox p={3}>
-                {/* Profile Avatar */}
-                <SoftBox display="flex" alignItems="center" mb={4}>
-                  <SoftBox
-                    width="80px"
-                    height="80px"
-                    borderRadius="50%"
-                    bgColor="info"
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="center"
-                    position="relative"
-                  >
-                    <SoftTypography variant="h2" color="white">
-                      {biodata.nama_lengkap ? (
-                        biodata.nama_lengkap.charAt(0).toUpperCase()
-                      ) : (
-                        <Person />
-                      )}
-                    </SoftTypography>
+              <Card>
+                <SoftBox p={{ xs: 2, sm: 3 }}>
+                  {/* Profile Avatar */}
+                  <SoftBox display="flex" alignItems="center" mb={4}>
                     <SoftBox
-                      width="15px"
-                      height="15px"
+                      width={{ xs: "60px", sm: "80px" }}
+                      height={{ xs: "60px", sm: "80px" }}
                       borderRadius="50%"
-                      bgColor="success"
-                      border="2px solid white"
-                      position="absolute"
-                      bottom="5px"
-                      right="5px"
-                    />
-                  </SoftBox>
-                </SoftBox>
-
-                {/* Profile Info Grid */}
-                <Grid container spacing={2}>
-                  {profileItems.map((item, index) => (
-                    <Grid item xs={12} md={6} key={index}>
+                      bgColor="info"
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="center"
+                      position="relative"
+                    >
+                      <SoftTypography variant={isMobile ? "h3" : "h2"} color="white">
+                        {biodata.nama_lengkap ? (
+                          biodata.nama_lengkap.charAt(0).toUpperCase()
+                        ) : (
+                          <Person sx={{ fontSize: { xs: 30, sm: 40 } }} />
+                        )}
+                      </SoftTypography>
                       <SoftBox
-                        display="flex"
-                        alignItems="center"
-                        gap={2}
-                        p={2}
-                        bgColor="#f8f9fa"
-                        borderRadius="lg"
-                        sx={{ transition: "all 0.3s ease" }}
-                      >
+                        width={{ xs: "12px", sm: "15px" }}
+                        height={{ xs: "12px", sm: "15px" }}
+                        borderRadius="50%"
+                        bgColor="success"
+                        border="2px solid white"
+                        position="absolute"
+                        bottom="5px"
+                        right="5px"
+                      />
+                    </SoftBox>
+                  </SoftBox>
+
+                  {/* Profile Info Grid */}
+                  <Grid container spacing={{ xs: 1, sm: 2 }}>
+                    {profileItems.map((item, index) => (
+                      <Grid item xs={12} md={6} key={index}>
                         <SoftBox
-                          width="40px"
-                          height="40px"
-                          borderRadius="50%"
                           display="flex"
                           alignItems="center"
-                          justifyContent="center"
-                          bgColor={`${item.color}15`}
-                          color={item.color}
+                          gap={{ xs: 1, sm: 2 }}
+                          p={{ xs: 1.5, sm: 2 }}
+                          bgColor="#f8f9fa"
+                          borderRadius="lg"
+                          sx={{ transition: "all 0.3s ease" }}
                         >
-                          {item.icon}
+                          <SoftBox
+                            width={{ xs: "35px", sm: "40px" }}
+                            height={{ xs: "35px", sm: "40px" }}
+                            borderRadius="50%"
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="center"
+                            bgColor={`${item.color}15`}
+                            color={item.color}
+                          >
+                            {React.cloneElement(item.icon, { 
+                              sx: { fontSize: { xs: 18, sm: 20 } } 
+                            })}
+                          </SoftBox>
+                          <SoftBox sx={{ flex: 1, minWidth: 0 }}>
+                            <SoftTypography 
+                              variant="caption" 
+                              color="text" 
+                              fontWeight="medium"
+                              sx={{ fontSize: { xs: "0.65rem", sm: "0.75rem" } }}
+                            >
+                              {item.label}
+                            </SoftTypography>
+                            <SoftTypography 
+                              variant="body2" 
+                              fontWeight="bold"
+                              sx={{ 
+                                fontSize: { xs: "0.8rem", sm: "0.875rem" },
+                                wordBreak: "break-word"
+                              }}
+                            >
+                              {item.value || "-"}
+                            </SoftTypography>
+                          </SoftBox>
                         </SoftBox>
-                        <SoftBox>
-                          <SoftTypography variant="caption" color="text" fontWeight="medium">
-                            {item.label}
-                          </SoftTypography>
-                          <SoftTypography variant="body2" fontWeight="bold">
-                            {item.value || "-"}
-                          </SoftTypography>
-                        </SoftBox>
-                      </SoftBox>
-                    </Grid>
-                  ))}
-                </Grid>
-              </SoftBox>
-            </Card>
-          </Grid>
+                      </Grid>
+                    ))}
+                  </Grid>
+                </SoftBox>
+              </Card>
+            </Grid>
 
-          {/* Right Side - Actions */}
-          <Grid item xs={12} lg={4}>
-            <Card sx={{ height: "100%" }}>
-              <SoftBox p={3} display="flex" flexDirection="column" height="100%">
-                <SoftTypography variant="h5" fontWeight="bold" textAlign="center" mb={3}>
-                  Aksi Profil
-                </SoftTypography>
-
-                <SoftBox display="flex" flexDirection="column" gap={2} flexGrow={1}>
-                  <SoftButton
-                    variant="gradient"
-                    color="info"
-                    fullWidth
-                    size="large"
-                    onClick={() => setShowUpdateModal(true)}
-                    startIcon={<Edit />}
+            {/* Right Side - Actions */}
+            <Grid item xs={12} lg={4}>
+              <Card sx={{ height: "100%" }}>
+                <SoftBox p={{ xs: 2, sm: 3 }} display="flex" flexDirection="column" height="100%">
+                  <SoftTypography 
+                    variant={isMobile ? "h6" : "h5"} 
+                    fontWeight="bold" 
+                    textAlign="center" 
+                    mb={3}
                   >
-                    Update Profil
-                  </SoftButton>
+                    Aksi Profil
+                  </SoftTypography>
 
-                  <SoftButton
-                    variant="outlined"
-                    color="error"
-                    fullWidth
-                    size="large"
-                    onClick={() => setShowLogoutModal(true)}
-                    startIcon={<Logout />}
-                  >
-                    Keluar
-                  </SoftButton>
+                  <SoftBox display="flex" flexDirection="column" gap={2} flexGrow={1}>
+                    <SoftButton
+                      variant="gradient"
+                      color="info"
+                      fullWidth
+                      size={isMobile ? "medium" : "large"}
+                      onClick={() => setShowUpdateModal(true)}
+                      startIcon={<Edit />}
+                      sx={{ py: { xs: 1.2, sm: 1.5 } }}
+                    >
+                      Update Profil
+                    </SoftButton>
 
-                  <SoftBox mt={4} display="flex" justifyContent="center" gap={2}>
-                    <SoftButton variant="text" color="dark" size="small" circular>
-                      <Print />
+                    <SoftButton
+                      variant="outlined"
+                      color="error"
+                      fullWidth
+                      size={isMobile ? "medium" : "large"}
+                      onClick={() => setShowLogoutModal(true)}
+                      startIcon={<Logout />}
+                      sx={{ py: { xs: 1.2, sm: 1.5 } }}
+                    >
+                      Keluar
                     </SoftButton>
-                    <SoftButton variant="text" color="dark" size="small" circular>
-                      <Share />
-                    </SoftButton>
-                    <SoftButton variant="text" color="dark" size="small" circular>
-                      <QrCodeScanner />
-                    </SoftButton>
+
+                    <SoftBox 
+                      mt={4} 
+                      display="flex" 
+                      justifyContent="center" 
+                      gap={{ xs: 1, sm: 2 }}
+                    >
+                      <SoftButton variant="text" color="dark" size="small" circular>
+                        <Print sx={{ fontSize: { xs: 18, sm: 20 } }} />
+                      </SoftButton>
+                      <SoftButton variant="text" color="dark" size="small" circular>
+                        <Share sx={{ fontSize: { xs: 18, sm: 20 } }} />
+                      </SoftButton>
+                      <SoftButton variant="text" color="dark" size="small" circular>
+                        <QrCodeScanner sx={{ fontSize: { xs: 18, sm: 20 } }} />
+                      </SoftButton>
+                    </SoftBox>
                   </SoftBox>
                 </SoftBox>
-              </SoftBox>
-            </Card>
+              </Card>
+            </Grid>
           </Grid>
-        </Grid>
-      </SoftBox>
+        </SoftBox>
+      </Container>
 
       {/* Logout Confirmation Modal */}
       <Modal
@@ -362,13 +390,13 @@ const DetailProfile = () => {
           top="50%"
           left="50%"
           sx={{ transform: "translate(-50%, -50%)" }}
-          width={{ xs: "90%", sm: 400 }}
+          width={{ xs: "95%", sm: 400 }}
         >
           <Card>
-            <SoftBox p={3} textAlign="center">
+            <SoftBox p={{ xs: 2, sm: 3 }} textAlign="center">
               <SoftBox
-                width="60px"
-                height="60px"
+                width={{ xs: "50px", sm: "60px" }}
+                height={{ xs: "50px", sm: "60px" }}
                 borderRadius="50%"
                 bgColor="error"
                 display="flex"
@@ -377,10 +405,14 @@ const DetailProfile = () => {
                 mx="auto"
                 mb={3}
               >
-                <Logout sx={{ color: "white", fontSize: 24 }} />
+                <Logout sx={{ color: "white", fontSize: { xs: 20, sm: 24 } }} />
               </SoftBox>
 
-              <SoftTypography variant="h5" fontWeight="bold" gutterBottom>
+              <SoftTypography 
+                variant={isMobile ? "h6" : "h5"} 
+                fontWeight="bold" 
+                gutterBottom
+              >
                 Konfirmasi Logout
               </SoftTypography>
               
@@ -388,13 +420,14 @@ const DetailProfile = () => {
                 Anda akan keluar dari sistem. Pastikan semua perubahan telah disimpan.
               </SoftTypography>
 
-              <SoftBox display="flex" gap={2}>
+              <SoftBox display="flex" gap={2} flexDirection={{ xs: "column", sm: "row" }}>
                 <SoftButton
                   variant="outlined"
                   color="dark"
                   fullWidth
                   onClick={() => setShowLogoutModal(false)}
                   startIcon={<Close />}
+                  size={isMobile ? "medium" : "large"}
                 >
                   Batal
                 </SoftButton>
@@ -404,6 +437,7 @@ const DetailProfile = () => {
                   fullWidth
                   onClick={handleLogout}
                   startIcon={<Logout />}
+                  size={isMobile ? "medium" : "large"}
                 >
                   Ya, Keluar
                 </SoftButton>
@@ -423,17 +457,19 @@ const DetailProfile = () => {
           position="absolute"
           top="50%"
           left="50%"
-          sx={{ transform: "translate(-50%, -50%)" }}
-          width={{ xs: "90%", sm: 600 }}
+          sx={{ transform: "translate(-50%, -50%)",maxHeight: "90vh",
+            overflowY: "auto", }}
+          width={{ xs: "95%", sm: 600 }}
+
         >
           <Card>
-            <SoftBox p={3}>
-              <SoftTypography variant="h5" fontWeight="bold" mb={3}>
-                <Edit sx={{ mr: 1, verticalAlign: "middle" }} />
+            <SoftBox p={{ xs: 2, sm: 3 }}>
+              <SoftTypography variant={isMobile ? "h6" : "h5"} fontWeight="bold" mb={3}>
+                <Edit sx={{ mr: 1, verticalAlign: "middle", fontSize: { xs: 20, sm: 24 } }} />
                 Update Biodata
               </SoftTypography>
 
-              <Grid container spacing={2}>
+              <Grid container spacing={{ xs: 1, sm: 2 }}>
                 {/* Nama Lengkap */}
                 <Grid item xs={12} md={6}>
                   <SoftTypography variant="caption" fontWeight="bold" color="text" display="block" mb={0.5}>
@@ -445,7 +481,8 @@ const DetailProfile = () => {
                     value={updatedBiodata.nama_lengkap || ""}
                     onChange={handleChange}
                     placeholder="Masukkan nama lengkap"
-                    startAdornment={<Person sx={{ color: "#cb0c9f" }} />}
+                    startAdornment={<Person sx={{ color: "#cb0c9f", fontSize: { xs: 18, sm: 20 } }} />}
+                    size={isMobile ? "small" : "medium"}
                   />
                 </Grid>
 
@@ -461,7 +498,8 @@ const DetailProfile = () => {
                     onChange={handleChange}
                     placeholder="Masukkan NRP"
                     onKeyPress={(e) => !/[0-9]/.test(e.key) && e.preventDefault()}
-                    startAdornment={<Badge sx={{ color: "#17c1e8" }} />}
+                    startAdornment={<Badge sx={{ color: "#17c1e8", fontSize: { xs: 18, sm: 20 } }} />}
+                    size={isMobile ? "small" : "medium"}
                   />
                 </Grid>
 
@@ -470,7 +508,7 @@ const DetailProfile = () => {
                   <SoftTypography variant="caption" fontWeight="bold" color="text" display="block" mb={0.5}>
                     Pangkat
                   </SoftTypography>
-                  <FormControl fullWidth size="small">
+                  <FormControl fullWidth size={isMobile ? "small" : "medium"}>
                     <Select
                       name="pangkat"
                       value={updatedBiodata.masterPangkatId || ""}
@@ -478,7 +516,8 @@ const DetailProfile = () => {
                       displayEmpty
                       sx={{
                         borderRadius: "8px",
-                        height: "44px",
+                        height: isMobile ? "40px" : "44px",
+                        fontSize: { xs: "0.9rem", sm: "1rem" },
                       }}
                     >
                       <MenuItem value="" disabled>Pilih Pangkat</MenuItem>
@@ -502,7 +541,8 @@ const DetailProfile = () => {
                     value={updatedBiodata.jabatan || ""}
                     onChange={handleChange}
                     placeholder="Masukkan jabatan"
-                    startAdornment={<Business sx={{ color: "#4caf50" }} />}
+                    startAdornment={<Business sx={{ color: "#4caf50", fontSize: { xs: 18, sm: 20 } }} />}
+                    size={isMobile ? "small" : "medium"}
                   />
                 </Grid>
 
@@ -511,7 +551,7 @@ const DetailProfile = () => {
                   <SoftTypography variant="caption" fontWeight="bold" color="text" display="block" mb={0.5}>
                     Kesatuan
                   </SoftTypography>
-                  <FormControl fullWidth size="small">
+                  <FormControl fullWidth size={isMobile ? "small" : "medium"}>
                     <Select
                       name="kesatuan"
                       value={updatedBiodata.masterKesatuanId || ""}
@@ -519,7 +559,8 @@ const DetailProfile = () => {
                       displayEmpty
                       sx={{
                         borderRadius: "8px",
-                        height: "44px",
+                        height: isMobile ? "40px" : "44px",
+                        fontSize: { xs: "0.9rem", sm: "1rem" },
                       }}
                     >
                       <MenuItem value="" disabled>Pilih Kesatuan</MenuItem>
@@ -540,23 +581,30 @@ const DetailProfile = () => {
                   <SoftInput
                     fullWidth
                     multiline
-                    rows={3}
+                    rows={isMobile ? 2 : 3}
                     name="alamat"
                     value={updatedBiodata.alamat || ""}
                     onChange={handleChange}
                     placeholder="Masukkan alamat"
-                    startAdornment={<LocationOn sx={{ color: "#9c27b0" }} />}
+                    startAdornment={<LocationOn sx={{ color: "#9c27b0", fontSize: { xs: 18, sm: 20 } }} />}
+                    size={isMobile ? "small" : "medium"}
                   />
                 </Grid>
               </Grid>
 
-              <SoftBox display="flex" gap={2} mt={3}>
+              <SoftBox 
+                display="flex" 
+                gap={2} 
+                mt={3} 
+                flexDirection={{ xs: "column", sm: "row" }}
+              >
                 <SoftButton
                   variant="outlined"
                   color="dark"
                   fullWidth
                   onClick={() => setShowUpdateModal(false)}
                   startIcon={<Close />}
+                  size={isMobile ? "medium" : "large"}
                 >
                   Batal
                 </SoftButton>
@@ -567,6 +615,7 @@ const DetailProfile = () => {
                   onClick={handleUpdateBiodata}
                   disabled={loading}
                   startIcon={<Save />}
+                  size={isMobile ? "medium" : "large"}
                 >
                   {loading ? "Menyimpan..." : "Simpan Perubahan"}
                 </SoftButton>
