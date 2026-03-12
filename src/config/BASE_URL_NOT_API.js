@@ -1,3 +1,3 @@
-const BASE_URL_NO_API = "https://psikologipoldasulsel.com";
+const BASE_URL_NO_API = "https://bagpsikologipoldasulsel.com";
 
 export default BASE_URL_NO_API;

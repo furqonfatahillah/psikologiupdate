@@ -1,5 +1,5 @@
 
-const BASE_URL = "https://psikologipoldasulsel.com/api";
+const BASE_URL = "https://bagpsikologipoldasulsel.com/api";
 
 
 export default BASE_URL;
