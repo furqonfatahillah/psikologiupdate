@@ -177,7 +177,7 @@ const Ujian = () => {
         text: "Kategori ID tidak ditemukan",
         confirmButtonColor: "#cb0c9f",
       }).then(() => {
-        navigate("/jenisTes");
+        navigate("/jenis-tes");
       });
     }
   }, [kategoriId, navigate]);
@@ -252,7 +252,7 @@ const Ujian = () => {
           text: "Tidak ada soal tersedia",
           confirmButtonColor: "#cb0c9f",
         }).then(() => {
-          navigate("/jenisTes");
+          navigate("/jenis-tes");
         });
         setLoading(false);
       }
@@ -389,7 +389,7 @@ const Ujian = () => {
         localStorage.removeItem(`timeLeft_${userId}_${kategoriId}`);
         localStorage.removeItem(`currentSoalIndex_${userId}_${kategoriId}`);
         localStorage.removeItem(`jawabanEssay_${userId}_${kategoriId}`);
-        navigate("/jenisTes");
+        navigate("/jenis-tes");
       });
     } catch (error) {
       console.error("Error finishing test session:", error);

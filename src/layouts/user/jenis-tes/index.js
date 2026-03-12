@@ -100,7 +100,7 @@ const JenisTes = () => {
   const handleNavigateToTes = (kategoriId, kategoriName) => {
     sessionStorage.setItem("kategoriId", kategoriId);
     sessionStorage.setItem("kategoriName", kategoriName);
-    navigate(`/JenisPengajuan`);
+    navigate(`/jenis-pengajuan`);
   };
 
   // Filter kategori yang sudah diambil
@@ -274,7 +274,7 @@ const JenisTes = () => {
             variant="gradient"
             color="info"
             size="large"
-            onClick={() => navigate("/RiwayatTes")}
+            onClick={() => navigate("/riwayat-tes")}
             startIcon={<History />}
             sx={{
               minWidth: "250px",
