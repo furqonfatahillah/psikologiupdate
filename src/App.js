@@ -4,7 +4,7 @@
 =========================================================
 */
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 
 // react-router components
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
@@ -14,69 +14,78 @@ import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import Icon from "@mui/material/Icon";
 
-// Soft UI Dashboard React components
+// Soft UI components
 import SoftBox from "components/SoftBox";
 
-// Soft UI Dashboard React examples
+// Soft UI examples
 import Sidenav from "examples/Sidenav";
 import Configurator from "examples/Configurator";
 
-// Soft UI Dashboard React themes
+// themes
 import theme from "assets/theme";
 import themeRTL from "assets/theme/theme-rtl";
 
-// RTL plugins
+// RTL
 import rtlPlugin from "stylis-plugin-rtl";
 import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
 
+// Protected route
 import ProtectedRouteAdmin from "components/Protected/ProtectedRouteAdmin";
 import ProtectedRouteUser from "components/Protected/ProtectedRouteUser";
 
-// Soft UI Dashboard React routes
+// routes
 import routes from "routes";
 
-// Soft UI Dashboard React contexts
-import { useSoftUIController, setMiniSidenav, setOpenConfigurator, setLayout } from "context";
+// context
+import {
+  useSoftUIController,
+  setMiniSidenav,
+  setOpenConfigurator,
+  setLayout,
+} from "context";
 
-// Images
+// logo
 import brand from "assets/images/psikologi.svg";
 
 export default function App() {
   const [controller, dispatch] = useSoftUIController();
-  const { miniSidenav, direction, layout, openConfigurator, sidenavColor } = controller;
+
+  const { miniSidenav, direction, layout, openConfigurator, sidenavColor } =
+    controller;
 
   const [onMouseEnter, setOnMouseEnter] = useState(false);
   const [rtlCache, setRtlCache] = useState(null);
+
   const { pathname } = useLocation();
 
-  // Ambil role dari sessionStorage
+  // ambil role dari session
   const getUserRole = () => {
     return sessionStorage.getItem("role");
   };
 
-  // Tentukan layout berdasarkan role
+  // set layout berdasarkan role
   useEffect(() => {
     const role = getUserRole();
 
     if (role === "ADMIN" || role === "SUPERADMIN") {
-      setLayout(dispatch, "dashboard"); // tampil sidenav
+      setLayout(dispatch, "dashboard");
     } else {
-      setLayout(dispatch, "vr"); // tanpa sidenav
+      setLayout(dispatch, "vr");
     }
   }, [pathname, dispatch]);
 
   // RTL cache
-  useMemo(() => {
-    const cacheRtl = createCache({
+  useEffect(() => {
+    const cache = createCache({
       key: "rtl",
       stylisPlugins: [rtlPlugin],
     });
 
-    setRtlCache(cacheRtl);
+    setRtlCache(cache);
   }, []);
 
-  // Open sidenav
+  // open sidenav
   const handleOnMouseEnter = () => {
     if (miniSidenav && !onMouseEnter) {
       setMiniSidenav(dispatch, false);
@@ -84,7 +93,7 @@ export default function App() {
     }
   };
 
-  // Close sidenav
+  // close sidenav
   const handleOnMouseLeave = () => {
     if (onMouseEnter) {
       setMiniSidenav(dispatch, true);
@@ -92,20 +101,22 @@ export default function App() {
     }
   };
 
+  // configurator
   const handleConfiguratorOpen = () =>
     setOpenConfigurator(dispatch, !openConfigurator);
 
-  // Set direction
+  // direction
   useEffect(() => {
     document.body.setAttribute("dir", direction);
   }, [direction]);
 
-  // Scroll ke atas saat pindah halaman
+  // scroll top saat pindah halaman
   useEffect(() => {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
   }, [pathname]);
 
+  // generate routes
   const getRoutes = (allRoutes) =>
     allRoutes.map((route) => {
       if (route.collapse) {
@@ -113,7 +124,6 @@ export default function App() {
       }
 
       if (route.route) {
-
         // USER ROUTE
         if (
           route.route === "/biodata" ||
@@ -130,9 +140,7 @@ export default function App() {
               key={route.key}
               path={route.route}
               element={
-                <ProtectedRouteUser>
-                  {route.component}
-                </ProtectedRouteUser>
+                <ProtectedRouteUser>{route.component}</ProtectedRouteUser>
               }
             />
           );
@@ -152,9 +160,7 @@ export default function App() {
               key={route.key}
               path={route.route}
               element={
-                <ProtectedRouteAdmin>
-                  {route.component}
-                </ProtectedRouteAdmin>
+                <ProtectedRouteAdmin>{route.component}</ProtectedRouteAdmin>
               }
             />
           );
@@ -172,6 +178,7 @@ export default function App() {
       return null;
     });
 
+  // button setting
   const configsButton = (
     <SoftBox
       display="flex"
@@ -190,11 +197,14 @@ export default function App() {
       sx={{ cursor: "pointer" }}
       onClick={handleConfiguratorOpen}
     >
-      <Icon fontSize="default" color="inherit">
-        settings
-      </Icon>
+      <Icon>settings</Icon>
     </SoftBox>
   );
+
+  // cegah error jika rtlCache belum ada
+  if (direction === "rtl" && !rtlCache) {
+    return null;
+  }
 
   return direction === "rtl" ? (
     <CacheProvider value={rtlCache}>
@@ -211,6 +221,7 @@ export default function App() {
               onMouseEnter={handleOnMouseEnter}
               onMouseLeave={handleOnMouseLeave}
             />
+
             <Configurator />
             {configsButton}
           </>
@@ -222,7 +233,6 @@ export default function App() {
           {getRoutes(routes)}
           <Route path="*" element={<Navigate to="/dashboard" />} />
         </Routes>
-
       </ThemeProvider>
     </CacheProvider>
   ) : (
@@ -245,6 +255,7 @@ export default function App() {
             onMouseEnter={handleOnMouseEnter}
             onMouseLeave={handleOnMouseLeave}
           />
+
           <Configurator />
           {configsButton}
         </>
@@ -254,9 +265,8 @@ export default function App() {
 
       <Routes>
         {getRoutes(routes)}
-        <Route path="*" element={<Navigate to="/" />} />
+        <Route path="*" element={<Navigate to="/dashboard" />} />
       </Routes>
-
     </ThemeProvider>
   );
 }
