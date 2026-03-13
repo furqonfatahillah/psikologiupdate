@@ -24,7 +24,7 @@ import SoftButton from "components/SoftButton";
 // Soft UI Dashboard React examples
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
-import Footer from "examples/Footer";
+// import Footer from "examples/Footer";
 
 // Images
 import BASE_URL from "../../../config/BASE_URL";
@@ -625,7 +625,7 @@ const DetailProfile = () => {
         </SoftBox>
       </Modal>
 
-      <Footer />
+      {/* <Footer /> */}
     </DashboardLayout>
   );
 };
