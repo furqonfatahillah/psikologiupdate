@@ -33,6 +33,7 @@ function CoverLayout({ color, header, title, description, image, children }) {
       {/* Background Image Full Screen */}
       <SoftBox
         position="fixed"
+        component="img"
         top={0}
         left={0}
         right={0}
