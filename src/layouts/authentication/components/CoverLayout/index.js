@@ -27,6 +27,7 @@ import SoftTypography from "components/SoftTypography";
 import PageLayout from "examples/LayoutContainers/PageLayout";
 
 function CoverLayout({ color, header, title, description, image, children }) {
+  console.log(image);
   return (
     <PageLayout background="white">
       {/* Background Image Full Screen */}

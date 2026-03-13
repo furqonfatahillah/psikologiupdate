@@ -36,7 +36,7 @@ function SignIn() {
 
     if (token) {
       if (role === "ADMIN" || role === "SUPERADMIN") {
-        navigate("/");
+        navigate("/dashboard");
       } else {
         navigate("/Biodata");
       }
@@ -52,8 +52,6 @@ function SignIn() {
       const svgPath = response.data.data.svg_path;
 
       const fullUrl = `${BASE_URL_NO_API}/${svgPath}`;
-
-      console.log("Background:", fullUrl);
 
       setBackgroundImage(fullUrl);
     } catch (error) {
@@ -83,7 +81,7 @@ function SignIn() {
       sessionStorage.setItem("role", role);
 
       if (role === "ADMIN" || role === "SUPERADMIN") {
-        navigate("/");
+        navigate("/dashboard");
       } else {
         navigate("/Biodata");
       }
