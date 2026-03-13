@@ -46,6 +46,7 @@ function SignIn() {
       const response = await axios.get(`${BASE_URL}/background`);
       const svgPath = response.data.data.svg_path;
       const fullUrl = `${BASE_URL_NO_API}/${svgPath}`;
+      console.log(fullUrl);
       setBackgroundImage(fullUrl);
     } catch (error) {
       Swal.fire(

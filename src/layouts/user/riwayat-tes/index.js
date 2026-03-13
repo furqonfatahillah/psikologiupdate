@@ -172,7 +172,7 @@ const RiwayatTes = () => {
             </SoftTypography>
           </SoftBox>
         </Container>
-        <Footer />
+        {/* <Footer /> */}
       </DashboardLayout>
     );
   }
@@ -188,7 +188,7 @@ const RiwayatTes = () => {
             </SoftTypography>
           </SoftBox>
         </Container>
-        <Footer />
+        {/* <Footer /> */}
       </DashboardLayout>
     );
   }
