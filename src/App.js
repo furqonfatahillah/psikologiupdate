@@ -2,19 +2,9 @@
 =========================================================
 * Soft UI Dashboard React - v4.0.1
 =========================================================
-
-* Product Page: https://www.creative-tim.com/product/soft-ui-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
 import { useState, useEffect, useMemo } from "react";
-import { jwtDecode } from "jwt-decode"; // Tambahkan import ini
 
 // react-router components
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
@@ -55,61 +45,28 @@ import brand from "assets/images/psikologi.svg";
 export default function App() {
   const [controller, dispatch] = useSoftUIController();
   const { miniSidenav, direction, layout, openConfigurator, sidenavColor } = controller;
+
   const [onMouseEnter, setOnMouseEnter] = useState(false);
   const [rtlCache, setRtlCache] = useState(null);
   const { pathname } = useLocation();
 
-  // Fungsi untuk mendapatkan role user dari token
+  // Ambil role dari sessionStorage
   const getUserRole = () => {
-    const token = sessionStorage.getItem("token");
-    if (!token) return null;
-    
-    try {
-      const decoded = jwtDecode(token);
-      return decoded.role;
-    } catch (error) {
-      console.error("Error decoding token:", error);
-      return null;
-    }
+    return sessionStorage.getItem("role");
   };
 
-  // Effect untuk mengatur layout berdasarkan role dan pathname
+  // Tentukan layout berdasarkan role
   useEffect(() => {
     const role = getUserRole();
-    
-    // Tentukan layout berdasarkan role dan path
+
     if (role === "ADMIN" || role === "SUPERADMIN") {
-      // Admin selalu menggunakan layout dashboard (dengan sidebar)
-      setLayout(dispatch, "dashboard");
-    } else if (role === "USER") {
-      // Untuk user, cek apakah path termasuk halaman user
-      const userPaths = [
-        "/biodata",
-        "/profile",
-        "/detail-profile",
-        "/instruksi-tes",
-        "/jenis-pengajuan",
-        "/jenis-tes",
-        "/riwayat-tes",
-        "/ujian"
-      ];
-      
-      const isUserPath = userPaths.some(path => pathname.startsWith(path));
-      
-      if (isUserPath) {
-        // Jika di halaman user, set layout ke "user" atau "vr" (tanpa sidebar)
-        setLayout(dispatch, "vr"); // Menggunakan layout vr yang tidak menampilkan sidebar
-      } else {
-        // Jika di halaman lain, gunakan dashboard
-        setLayout(dispatch, "dashboard");
-      }
+      setLayout(dispatch, "dashboard"); // tampil sidenav
     } else {
-      // Jika tidak login, redirect ke login
-      setLayout(dispatch, "vr");
+      setLayout(dispatch, "vr"); // tanpa sidenav
     }
   }, [pathname, dispatch]);
 
-  // Cache for the rtl
+  // RTL cache
   useMemo(() => {
     const cacheRtl = createCache({
       key: "rtl",
@@ -119,7 +76,7 @@ export default function App() {
     setRtlCache(cacheRtl);
   }, []);
 
-  // Open sidenav when mouse enter on mini sidenav
+  // Open sidenav
   const handleOnMouseEnter = () => {
     if (miniSidenav && !onMouseEnter) {
       setMiniSidenav(dispatch, false);
@@ -127,7 +84,7 @@ export default function App() {
     }
   };
 
-  // Close sidenav when mouse leave mini sidenav
+  // Close sidenav
   const handleOnMouseLeave = () => {
     if (onMouseEnter) {
       setMiniSidenav(dispatch, true);
@@ -135,15 +92,15 @@ export default function App() {
     }
   };
 
-  // Change the openConfigurator state
-  const handleConfiguratorOpen = () => setOpenConfigurator(dispatch, !openConfigurator);
+  const handleConfiguratorOpen = () =>
+    setOpenConfigurator(dispatch, !openConfigurator);
 
-  // Setting the dir attribute for the body element
+  // Set direction
   useEffect(() => {
     document.body.setAttribute("dir", direction);
   }, [direction]);
 
-  // Setting page scroll to 0 when changing the route
+  // Scroll ke atas saat pindah halaman
   useEffect(() => {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
@@ -158,7 +115,16 @@ export default function App() {
       if (route.route) {
 
         // USER ROUTE
-        if (route.route === "/biodata" || route.route === "/profile" || route.route === "/detail-profile" || route.route === "/instruksi-tes" || route.route === "/jenis-pengajuan" || route.route === "/jenis-tes" || route.route === "/riwayat-tes" || route.route === "/ujian") {
+        if (
+          route.route === "/biodata" ||
+          route.route === "/profile" ||
+          route.route === "/detail-profile" ||
+          route.route === "/instruksi-tes" ||
+          route.route === "/jenis-pengajuan" ||
+          route.route === "/jenis-tes" ||
+          route.route === "/riwayat-tes" ||
+          route.route === "/ujian"
+        ) {
           return (
             <Route
               key={route.key}
@@ -234,7 +200,7 @@ export default function App() {
     <CacheProvider value={rtlCache}>
       <ThemeProvider theme={themeRTL}>
         <CssBaseline />
-        {/* Sidenav hanya ditampilkan jika layout === "dashboard" */}
+
         {layout === "dashboard" && (
           <>
             <Sidenav
@@ -249,17 +215,20 @@ export default function App() {
             {configsButton}
           </>
         )}
+
         {layout === "vr" && <Configurator />}
+
         <Routes>
           {getRoutes(routes)}
-          <Route path="*" element={<Navigate to="/dashboard" />} />
+          <Route path="*" element={<Navigate to="/" />} />
         </Routes>
+
       </ThemeProvider>
     </CacheProvider>
   ) : (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      {/* Sidenav hanya ditampilkan jika layout === "dashboard" */}
+
       {layout === "dashboard" && (
         <>
           <Sidenav
@@ -280,11 +249,14 @@ export default function App() {
           {configsButton}
         </>
       )}
+
       {layout === "vr" && <Configurator />}
+
       <Routes>
         {getRoutes(routes)}
-        <Route path="*" element={<Navigate to="/dashboard" />} />
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
+
     </ThemeProvider>
   );
 }
