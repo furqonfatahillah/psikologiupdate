@@ -25,6 +25,8 @@ import SoftTypography from "components/SoftTypography";
 
 // Soft UI Dashboard React examples
 import PageLayout from "examples/LayoutContainers/PageLayout";
+import PoldaLogo from "../../../../assets/images/background.svg";
+
 
 function CoverLayout({ color, header, title, description, image, children }) {
   console.log(image);
@@ -39,8 +41,8 @@ function CoverLayout({ color, header, title, description, image, children }) {
         right={0}
         bottom={0}
         zIndex={0}
+         src={PoldaLogo}
         sx={{
-          backgroundImage: `url(${image})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
