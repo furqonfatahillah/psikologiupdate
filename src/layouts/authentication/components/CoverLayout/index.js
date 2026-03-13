@@ -41,7 +41,7 @@ function CoverLayout({ color, header, title, description, image, children }) {
         bottom={0}
         zIndex={0}
         sx={{
-          backgroundImage: `url(https://static.vecteezy.com/system/resources/thumbnails/057/068/323/small/single-fresh-red-strawberry-on-table-green-background-food-fruit-sweet-macro-juicy-plant-image-photo.jpg)`,
+          backgroundImage: `url(https://www.svgrepo.com/show/430111/address-pin-location.svg)`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
