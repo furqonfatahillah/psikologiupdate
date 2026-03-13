@@ -25,8 +25,6 @@ import SoftTypography from "components/SoftTypography";
 
 // Soft UI Dashboard React examples
 import PageLayout from "examples/LayoutContainers/PageLayout";
-import PoldaLogo from "../../../../assets/images/background.svg";
-
 
 function CoverLayout({ color, header, title, description, image, children }) {
   console.log(image);
@@ -35,13 +33,14 @@ function CoverLayout({ color, header, title, description, image, children }) {
       {/* Background Image Full Screen */}
       <SoftBox
         position="fixed"
+        component="img"
         top={0}
         left={0}
         right={0}
         bottom={0}
         zIndex={0}
+        src={image}
         sx={{
-          backgroundImage: `url(https://www.svgrepo.com/show/430111/address-pin-location.svg)`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
