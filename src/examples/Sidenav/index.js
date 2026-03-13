@@ -79,7 +79,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
         localStorage.removeItem("userTestSessionId");
         
         // Navigasi ke halaman login
-        navigate("/login");
+        navigate("/authentication/sign-in");
         
         Swal.fire({
           title: "Berhasil Logout!",

@@ -148,7 +148,7 @@ const DetailProfile = () => {
   // Handle logout
   const handleLogout = () => {
     sessionStorage.removeItem("token");
-    navigate("/login");
+    navigate("/authentication/sign-in");
   };
 
   // Fetch data on component mount
