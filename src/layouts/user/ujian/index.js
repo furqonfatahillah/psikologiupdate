@@ -14,7 +14,6 @@ import AlertTitle from "@mui/material/AlertTitle";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
 import LinearProgress from "@mui/material/LinearProgress";
 import Tooltip from "@mui/material/Tooltip";
-import Icon from "@mui/material/Icon";
 import Container from "@mui/material/Container";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
@@ -64,14 +63,6 @@ const Ujian = () => {
   const [loading, setLoading] = useState(true);
   const [listSoal, setListSoal] = useState([]);
   
-  // State untuk menyimpan jawaban pilihan ganda
-  const [jawabanPilihanGanda, setJawabanPilihanGanda] = useState(() => {
-    const savedAnswers = localStorage.getItem(
-      `jawabanPilihanGanda_${userId}_${kategoriId}`
-    );
-    return savedAnswers ? JSON.parse(savedAnswers) : {};
-  });
-
   // Hook untuk responsive
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
@@ -79,23 +70,47 @@ const Ujian = () => {
   
   const kategoriId = sessionStorage.getItem("kategoriId");
   const token = localStorage.getItem("tokenLocal");
-  const decodedToken = jwtDecode(token);
-  const userId = decodedToken.id;
+  
+  // Deklarasikan userId setelah token dan sebelum useState yang menggunakannya
+  let userId = null;
+  if (token) {
+    try {
+      const decodedToken = jwtDecode(token);
+      userId = decodedToken.id;
+    } catch (error) {
+      console.error("Error decoding token:", error);
+    }
+  }
+
+  const sessionTestId = localStorage.getItem("userTestSessionId");
+  
   const [currentSoalIndex, setCurrentSoalIndex] = useState(() => {
+    if (!userId || !kategoriId) return 0;
     const savedIndex = localStorage.getItem(
       `currentSoalIndex_${userId}_${kategoriId}`
     );
     return savedIndex ? parseInt(savedIndex, 10) : 0;
   });
 
+  // State untuk menyimpan jawaban pilihan ganda
+  const [jawabanPilihanGanda, setJawabanPilihanGanda] = useState(() => {
+    if (!userId || !kategoriId) return {};
+    const savedAnswers = localStorage.getItem(
+      `jawabanPilihanGanda_${userId}_${kategoriId}`
+    );
+    return savedAnswers ? JSON.parse(savedAnswers) : {};
+  });
+
   const [jawabanEssay, setJawabanEssay] = useState(() => {
+    if (!userId || !kategoriId) return {};
     const savedAnswers = localStorage.getItem(
       `jawabanEssay_${userId}_${kategoriId}`
     );
     return savedAnswers ? JSON.parse(savedAnswers) : {};
   });
-  const sessionTestId = localStorage.getItem("userTestSessionId");
+
   const [timeLeft, setTimeLeft] = useState(() => {
+    if (!userId || !kategoriId) return null;
     const savedTime = localStorage.getItem(`timeLeft_${userId}_${kategoriId}`);
     return savedTime ? parseInt(savedTime, 10) : null;
   });
@@ -250,10 +265,12 @@ const Ujian = () => {
             const totalSeconds = waktuPengerjaan * 60;
             if (timeLeft === null) {
               setTimeLeft(totalSeconds);
-              localStorage.setItem(
-                `timeLeft_${userId}_${kategoriId}`,
-                totalSeconds
-              );
+              if (userId && kategoriId) {
+                localStorage.setItem(
+                  `timeLeft_${userId}_${kategoriId}`,
+                  totalSeconds
+                );
+              }
             }
           } else {
             console.error("Format waktu tidak valid:", waktuPengerjaanStr);
@@ -304,19 +321,23 @@ const Ujian = () => {
           if (prevTime <= 1) {
             clearInterval(timer);
             finishTestSession();
-            localStorage.removeItem(`timeLeft_${userId}_${kategoriId}`);
+            if (userId && kategoriId) {
+              localStorage.removeItem(`timeLeft_${userId}_${kategoriId}`);
+            }
           }
-          localStorage.setItem(
-            `timeLeft_${userId}_${kategoriId}`,
-            prevTime - 1
-          );
+          if (userId && kategoriId) {
+            localStorage.setItem(
+              `timeLeft_${userId}_${kategoriId}`,
+              prevTime - 1
+            );
+          }
           return prevTime - 1;
         });
       }, 1000);
     }
 
     return () => clearInterval(timer);
-  }, [timeLeft, sessionTestId]);
+  }, [timeLeft, sessionTestId, userId, kategoriId]);
 
   const formatTime = (seconds) => {
     const hours = Math.floor(seconds / 3600);
@@ -373,10 +394,12 @@ const Ujian = () => {
         ...prev,
         [soalId]: pilihanJawabanId
       };
-      localStorage.setItem(
-        `jawabanPilihanGanda_${userId}_${kategoriId}`,
-        JSON.stringify(newJawaban)
-      );
+      if (userId && kategoriId) {
+        localStorage.setItem(
+          `jawabanPilihanGanda_${userId}_${kategoriId}`,
+          JSON.stringify(newJawaban)
+        );
+      }
       return newJawaban;
     });
   };
@@ -392,14 +415,16 @@ const Ujian = () => {
     const nextIndex = currentSoalIndex + 1;
     if (nextIndex < listSoal.length) {
       setCurrentSoalIndex(nextIndex);
-      localStorage.setItem(
-        `currentSoalIndex_${userId}_${kategoriId}`,
-        nextIndex
-      );
-      localStorage.setItem(
-        `jawabanEssay_${userId}_${kategoriId}`,
-        JSON.stringify(jawabanEssay)
-      );
+      if (userId && kategoriId) {
+        localStorage.setItem(
+          `currentSoalIndex_${userId}_${kategoriId}`,
+          nextIndex
+        );
+        localStorage.setItem(
+          `jawabanEssay_${userId}_${kategoriId}`,
+          JSON.stringify(jawabanEssay)
+        );
+      }
     } else {
       finishTestSession(soalId, pilihanJawabanId, teksJawaban);
     }
@@ -429,10 +454,12 @@ const Ujian = () => {
         text: "Ujian telah diselesaikan.",
         confirmButtonColor: "#cb0c9f",
       }).then(() => {
-        localStorage.removeItem(`timeLeft_${userId}_${kategoriId}`);
-        localStorage.removeItem(`currentSoalIndex_${userId}_${kategoriId}`);
-        localStorage.removeItem(`jawabanEssay_${userId}_${kategoriId}`);
-        localStorage.removeItem(`jawabanPilihanGanda_${userId}_${kategoriId}`);
+        if (userId && kategoriId) {
+          localStorage.removeItem(`timeLeft_${userId}_${kategoriId}`);
+          localStorage.removeItem(`currentSoalIndex_${userId}_${kategoriId}`);
+          localStorage.removeItem(`jawabanEssay_${userId}_${kategoriId}`);
+          localStorage.removeItem(`jawabanPilihanGanda_${userId}_${kategoriId}`);
+        }
         navigate("/jenis-tes");
       });
     } catch (error) {
@@ -838,13 +865,15 @@ const Ujian = () => {
                               [currentSoal.id]: e.target.value,
                             });
                             // Simpan ke localStorage
-                            localStorage.setItem(
-                              `jawabanEssay_${userId}_${kategoriId}`,
-                              JSON.stringify({
-                                ...jawabanEssay,
-                                [currentSoal.id]: e.target.value,
-                              })
-                            );
+                            if (userId && kategoriId) {
+                              localStorage.setItem(
+                                `jawabanEssay_${userId}_${kategoriId}`,
+                                JSON.stringify({
+                                  ...jawabanEssay,
+                                  [currentSoal.id]: e.target.value,
+                                })
+                              );
+                            }
                           }}
                           style={{
                             width: "100%",
