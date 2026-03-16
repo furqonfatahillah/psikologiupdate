@@ -513,30 +513,53 @@ const ManajemenPengguna = () => {
     }
   };
 
-  const handleUpdateAdmin = async () => {
+  // PERBAIKAN: Fungsi handleUpdateAdmin yang sudah diperbaiki
+  const handleUpdateAdmin = async (e) => {
+    e.preventDefault(); // Mencegah refresh halaman
+    setLoading(true);
+
     const token = sessionStorage.getItem("token");
     if (!token) {
       Swal.fire("Akses Ditolak", "Token tidak ditemukan", "error");
+      setLoading(false);
+      return;
+    }
+
+    // Validasi input
+    if (!adminToUpdate?.username?.trim()) {
+      Swal.fire("Error", "Username tidak boleh kosong", "error");
+      setLoading(false);
       return;
     }
 
     try {
+      // Buat payload hanya dengan field yang diperlukan
       const payload = {
-        username: adminToUpdate.username,
-        password: adminToUpdate.password,
-        role: adminToUpdate.role,
+        username: adminToUpdate.username.trim(),
+        role: adminToUpdate.role || "ADMIN",
       };
+
+      // Hanya tambahkan password jika diisi (tidak kosong)
+      if (adminToUpdate.password && adminToUpdate.password.trim() !== "") {
+        payload.password = adminToUpdate.password.trim();
+      }
+
       const response = await axios.put(
         `${BASE_URL}/admins/${adminToUpdate.id}`,
         payload,
         {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { 
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json"
+          },
         }
       );
+      
       if (response.data.status === "success") {
         Swal.fire("Berhasil!", "Admin berhasil diperbarui.", "success");
         setOpenUpdateAdminModal(false);
-        setAdminTableKey((prevKey) => prevKey + 1);
+        setAdminToUpdate(null); // Reset state
+        setAdminTableKey((prevKey) => prevKey + 1); // Refresh data
       } else {
         Swal.fire(
           "Gagal!",
@@ -545,11 +568,14 @@ const ManajemenPengguna = () => {
         );
       }
     } catch (error) {
+      console.error("Error updating admin:", error);
       Swal.fire(
         "Gagal!",
         error.response?.data?.message || "Gagal memperbarui admin.",
         "error"
       );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -1084,10 +1110,13 @@ const ManajemenPengguna = () => {
                     </Box>
                   </Modal>
 
-                  {/* Update Admin Modal */}
+                  {/* PERBAIKAN: Update Admin Modal dengan form yang benar */}
                   <Modal
                     open={openUpdateAdminModal}
-                    onClose={() => setOpenUpdateAdminModal(false)}
+                    onClose={() => {
+                      setOpenUpdateAdminModal(false);
+                      setAdminToUpdate(null); // Reset state saat modal ditutup
+                    }}
                     aria-labelledby="update-admin-title"
                   >
                     <Box sx={style}>
@@ -1106,7 +1135,8 @@ const ManajemenPengguna = () => {
                         UPDATE ADMIN
                       </Typography>
 
-                      <Box>
+                      {/* PERBAIKAN: Tambahkan form dengan onSubmit handler */}
+                      <form onSubmit={handleUpdateAdmin}>
                         <TextField
                           fullWidth
                           label="Username"
@@ -1115,6 +1145,7 @@ const ManajemenPengguna = () => {
                           name="username"
                           value={adminToUpdate?.username || ""}
                           onChange={handleAdminChange}
+                          required
                           sx={{
                             mb: 2,
                             '& .MuiInputLabel-root': { fontSize: '0.875rem' },
@@ -1124,13 +1155,14 @@ const ManajemenPengguna = () => {
 
                         <TextField
                           fullWidth
-                          label="Password"
+                          label="Password (Kosongkan jika tidak diubah)"
                           variant="outlined"
                           size="small"
                           type="password"
                           name="password"
                           value={adminToUpdate?.password || ""}
                           onChange={handleAdminChange}
+                          placeholder="Biarkan kosong jika tidak ingin mengubah password"
                           sx={{
                             mb: 2,
                             '& .MuiInputLabel-root': { fontSize: '0.875rem' },
@@ -1153,13 +1185,17 @@ const ManajemenPengguna = () => {
                             })}
                             placeholder="Pilih role..."
                             styles={selectStyles}
+                            required
                           />
                         </Box>
 
                         <Box display="flex" justifyContent="flex-end" gap={2}>
                           <Button
                             variant="outlined"
-                            onClick={() => setOpenUpdateAdminModal(false)}
+                            onClick={() => {
+                              setOpenUpdateAdminModal(false);
+                              setAdminToUpdate(null);
+                            }}
                             size="small"
                             sx={{
                               fontSize: '0.875rem',
@@ -1177,13 +1213,13 @@ const ManajemenPengguna = () => {
                               fontSize: '0.875rem',
                               backgroundColor: '#cb0c9f',
                               '&:hover': { backgroundColor: '#b00b8a' },
-                              color: '#ffffff' // Warna putih dalam hex
+                              color: '#ffffff'
                             }}
                           >
                             {loading ? <CircularProgress size={20} sx={{ color: '#ffffff' }} /> : "Simpan"}
                           </Button>
                         </Box>
-                      </Box>
+                      </form>
                     </Box>
                   </Modal>
                 </CustomTabPanel>
