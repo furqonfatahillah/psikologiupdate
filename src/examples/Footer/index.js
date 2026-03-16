@@ -60,8 +60,8 @@ function Footer({ company, links }) {
         fontSize={size.sm}
         px={1.5}
       >
-        &copy; {new Date().getFullYear()}, made with
-        <SoftBox fontSize={size.md} color="text" mb={-0.5} mx={0.25}>
+        &copy; {new Date().getFullYear()}, Nexora Labs. All Rights Reserved.
+        {/* <SoftBox fontSize={size.md} color="text" mb={-0.5} mx={0.25}>
           <Icon color="inherit" fontSize="inherit">
             favorite
           </Icon>
@@ -72,9 +72,9 @@ function Footer({ company, links }) {
             &nbsp;{name}&nbsp;
           </SoftTypography>
         </Link>
-        for a better web.
+        for a better web. */}
       </SoftBox>
-      <SoftBox
+      {/* <SoftBox
         component="ul"
         sx={({ breakpoints }) => ({
           display: "flex",
@@ -92,7 +92,7 @@ function Footer({ company, links }) {
         })}
       >
         {renderLinks()}
-      </SoftBox>
+      </SoftBox> */}
     </SoftBox>
   );
 }
