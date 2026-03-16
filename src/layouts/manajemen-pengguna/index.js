@@ -513,7 +513,7 @@ const ManajemenPengguna = () => {
     }
   };
 
-  // PERBAIKAN: Fungsi handleUpdateAdmin yang sudah diperbaiki
+  // PERBAIKAN: Handle update admin dengan payload sesuai format
   const handleUpdateAdmin = async (e) => {
     e.preventDefault(); // Mencegah refresh halaman
     setLoading(true);
@@ -533,16 +533,18 @@ const ManajemenPengguna = () => {
     }
 
     try {
-      // Buat payload hanya dengan field yang diperlukan
+      // Buat payload dengan format yang benar
       const payload = {
-        username: adminToUpdate.username.trim(),
-        role: adminToUpdate.role || "ADMIN",
+        username: adminToUpdate.username,
+        role: adminToUpdate.role,
       };
 
-      // Hanya tambahkan password jika diisi (tidak kosong)
+      // Hanya tambahkan password jika diisi dan tidak kosong
       if (adminToUpdate.password && adminToUpdate.password.trim() !== "") {
-        payload.password = adminToUpdate.password.trim();
+        payload.password = adminToUpdate.password;
       }
+
+      console.log("Sending payload:", payload); // Untuk debugging
 
       const response = await axios.put(
         `${BASE_URL}/admins/${adminToUpdate.id}`,
@@ -569,11 +571,25 @@ const ManajemenPengguna = () => {
       }
     } catch (error) {
       console.error("Error updating admin:", error);
-      Swal.fire(
-        "Gagal!",
-        error.response?.data?.message || "Gagal memperbarui admin.",
-        "error"
-      );
+      
+      // Tangani error dengan lebih baik
+      let errorMessage = "Gagal memperbarui admin.";
+      
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+        
+        // Jika error terkait username sudah digunakan
+        if (errorMessage.toLowerCase().includes("username sudah digunakan") || 
+            errorMessage.toLowerCase().includes("already exists")) {
+          errorMessage = "Username sudah digunakan. Silakan pilih username lain.";
+        }
+        // Jika error terkait validasi Prisma
+        else if (errorMessage.includes("prisma") || errorMessage.includes("Argument")) {
+          errorMessage = "Terjadi kesalahan validasi data. Silakan coba lagi atau hubungi administrator.";
+        }
+      }
+      
+      Swal.fire("Gagal!", errorMessage, "error");
     } finally {
       setLoading(false);
     }
@@ -1135,7 +1151,6 @@ const ManajemenPengguna = () => {
                         UPDATE ADMIN
                       </Typography>
 
-                      {/* PERBAIKAN: Tambahkan form dengan onSubmit handler */}
                       <form onSubmit={handleUpdateAdmin}>
                         <TextField
                           fullWidth
