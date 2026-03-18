@@ -36,6 +36,7 @@
     "react-router-dom": "6.11.1",
     "react-scripts": "5.0.1",
     "react-select": "^5.10.2",
+    "react-snap": "^1.23.0",
     "stylis": "4.2.0",
     "stylis-plugin-rtl": "2.1.1",
     "sweetalert2": "^11.26.18",
