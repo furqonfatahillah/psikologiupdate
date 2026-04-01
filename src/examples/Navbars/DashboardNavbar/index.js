@@ -147,6 +147,16 @@ function DashboardNavbar({ absolute, light, isMini }) {
         </SoftBox>
         {isMini ? null : (
           <SoftBox sx={(theme) => navbarRow(theme, { isMini })}>
+            <IconButton
+                size="small"
+                color="inherit"
+                sx={navbarMobileMenu}
+                onClick={handleMiniSidenav}
+              >
+                <Icon className={light ? "text-white" : "text-dark"}>
+                  {miniSidenav ? "menu_open" : "menu"}
+                </Icon>
+              </IconButton>
             {/* <SoftBox pr={1}>
               <SoftInput
                 placeholder="Type here..."
