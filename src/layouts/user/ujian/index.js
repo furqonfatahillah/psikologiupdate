@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import disableDevtool from "disable-devtool";
 import axios from "axios";
@@ -70,6 +70,8 @@ const Ujian = () => {
 
   const kategoriId = sessionStorage.getItem("kategoriId");
   const token = localStorage.getItem("tokenLocal");
+  const scrollRef = useRef(null);
+  const scrollPos = useRef(0);
 
   // Deklarasikan userId setelah token dan sebelum useState yang menggunakannya
   let userId = null;
@@ -350,6 +352,14 @@ const Ujian = () => {
     )}:${String(secs).padStart(2, "0")}`;
   };
 
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollPos.current;
+    }
+  });
+
+
   const submitJawaban = async (
     soalId,
     pilihanJawabanId = null,
@@ -411,12 +421,12 @@ const Ujian = () => {
     teksJawaban = null
   ) => {
     if (isSubmitting) return;
-    
-    try{
+
+    try {
       setIsSubmitting(true);
       // Submit jawaban ke server
       await submitJawaban(soalId, pilihanJawabanId, teksJawaban);
-  
+
       const nextIndex = currentSoalIndex + 1;
       if (nextIndex < listSoal.length) {
         setCurrentSoalIndex(nextIndex);
@@ -434,19 +444,19 @@ const Ujian = () => {
         finishTestSession(soalId, pilihanJawabanId, teksJawaban);
       }
 
-    }catch (error) {
-    console.error("Error handleNextSoal:", error);
-  } finally {
-    setIsSubmitting(false);
-  }
+    } catch (error) {
+      console.error("Error handleNextSoal:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const finishTestSession = async () => {
-  // const finishTestSession = async (
-  //   soalId = null,
-  //   pilihanJawabanId = null,
-  //   teksJawaban = null
-  // ) => {
+    // const finishTestSession = async (
+    //   soalId = null,
+    //   pilihanJawabanId = null,
+    //   teksJawaban = null
+    // ) => {
 
     // if (soalId) {
     //   await submitJawaban(soalId, pilihanJawabanId, teksJawaban);
@@ -535,6 +545,10 @@ const Ujian = () => {
 
         {/* Grid Nomor Soal */}
         <SoftBox
+          ref={scrollRef}
+          onScroll={(e) => {
+            scrollPos.current = e.target.scrollTop;
+          }}
           display="flex"
           flexWrap="wrap"
           gap={1}
