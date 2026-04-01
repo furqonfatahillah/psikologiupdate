@@ -52,7 +52,7 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 
 import BASE_URL from "../../../config/BASE_URL";
 import BASE_URL_NO_API from "../../../config/BASE_URL_NOT_API";
-
+const [isSubmitting, setIsSubmitting] = useState(false);
 
 const Ujian = () => {
   const [isProtected, setIsProtected] = useState(false);
@@ -410,25 +410,35 @@ const Ujian = () => {
     pilihanJawabanId = null,
     teksJawaban = null
   ) => {
-    // Submit jawaban ke server
-    await submitJawaban(soalId, pilihanJawabanId, teksJawaban);
-
-    const nextIndex = currentSoalIndex + 1;
-    if (nextIndex < listSoal.length) {
-      setCurrentSoalIndex(nextIndex);
-      if (userId && kategoriId) {
-        localStorage.setItem(
-          `currentSoalIndex_${userId}_${kategoriId}`,
-          nextIndex
-        );
-        localStorage.setItem(
-          `jawabanEssay_${userId}_${kategoriId}`,
-          JSON.stringify(jawabanEssay)
-        );
+    if (isSubmitting) return;
+    
+    try{
+      setIsSubmitting(true);
+      // Submit jawaban ke server
+      await submitJawaban(soalId, pilihanJawabanId, teksJawaban);
+  
+      const nextIndex = currentSoalIndex + 1;
+      if (nextIndex < listSoal.length) {
+        setCurrentSoalIndex(nextIndex);
+        if (userId && kategoriId) {
+          localStorage.setItem(
+            `currentSoalIndex_${userId}_${kategoriId}`,
+            nextIndex
+          );
+          localStorage.setItem(
+            `jawabanEssay_${userId}_${kategoriId}`,
+            JSON.stringify(jawabanEssay)
+          );
+        }
+      } else {
+        finishTestSession(soalId, pilihanJawabanId, teksJawaban);
       }
-    } else {
-      finishTestSession(soalId, pilihanJawabanId, teksJawaban);
-    }
+
+    }catch (error) {
+    console.error("Error handleNextSoal:", error);
+  } finally {
+    setIsSubmitting(false);
+  }
   };
 
   const finishTestSession = async (
@@ -436,6 +446,7 @@ const Ujian = () => {
     pilihanJawabanId = null,
     teksJawaban = null
   ) => {
+
     if (soalId) {
       await submitJawaban(soalId, pilihanJawabanId, teksJawaban);
     }
@@ -779,6 +790,7 @@ const Ujian = () => {
 
                         return (
                           <SoftButton
+                            disabled={isSubmitting}
                             key={index}
                             variant={isSelected ? "contained" : "outlined"}
                             color={isSelected ? "success" : "dark"}
