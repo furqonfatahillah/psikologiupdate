@@ -62,15 +62,15 @@ const Ujian = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [listSoal, setListSoal] = useState([]);
-  
+
   // Hook untuk responsive
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const isTablet = useMediaQuery(theme.breakpoints.between('md', 'lg'));
-  
+
   const kategoriId = sessionStorage.getItem("kategoriId");
   const token = localStorage.getItem("tokenLocal");
-  
+
   // Deklarasikan userId setelah token dan sebelum useState yang menggunakannya
   let userId = null;
   if (token) {
@@ -83,7 +83,7 @@ const Ujian = () => {
   }
 
   const sessionTestId = localStorage.getItem("userTestSessionId");
-  
+
   const [currentSoalIndex, setCurrentSoalIndex] = useState(() => {
     if (!userId || !kategoriId) return 0;
     const savedIndex = localStorage.getItem(
@@ -202,10 +202,11 @@ const Ujian = () => {
 
   const handleViolation = () => {
     setIsProtected(true);
-    setViolationCount((prevCount) => {
-      setTimeout(() => setIsProtected(false), 1000);
-      return prevCount + 1;
-    });
+    setViolationCount(prev => prev + 1);
+
+    setTimeout(() => {
+      setIsProtected(false);
+    }, 1000);
   };
 
   // Fetch soal
@@ -404,13 +405,13 @@ const Ujian = () => {
     });
   };
 
-  const handleNextSoal = (
+  const handleNextSoal = async (
     soalId,
     pilihanJawabanId = null,
     teksJawaban = null
   ) => {
     // Submit jawaban ke server
-    submitJawaban(soalId, pilihanJawabanId, teksJawaban);
+    await submitJawaban(soalId, pilihanJawabanId, teksJawaban);
 
     const nextIndex = currentSoalIndex + 1;
     if (nextIndex < listSoal.length) {
@@ -500,17 +501,17 @@ const Ujian = () => {
             </SoftButton>
           )}
         </SoftBox>
-        
+
         {/* Progress Bar */}
         <SoftBox mb={2}>
           <SoftTypography variant="caption" color="text" display="block" mb={0.5}>
             Progress: {totalTerjawab}/{listSoal.length} Soal Terjawab
           </SoftTypography>
-          <LinearProgress 
-            variant="determinate" 
-            value={progress} 
-            sx={{ 
-              height: 8, 
+          <LinearProgress
+            variant="determinate"
+            value={progress}
+            sx={{
+              height: 8,
               borderRadius: 4,
               bgcolor: "#e9ecef",
               "& .MuiLinearProgress-bar": {
@@ -521,16 +522,16 @@ const Ujian = () => {
         </SoftBox>
 
         {/* Grid Nomor Soal */}
-        <SoftBox 
-          display="flex" 
-          flexWrap="wrap" 
+        <SoftBox
+          display="flex"
+          flexWrap="wrap"
           gap={1}
           sx={{ maxHeight: isMobile ? "auto" : "calc(100vh - 300px)", overflowY: "auto", p: 0.5 }}
         >
           {listSoal.map((soal, index) => {
             const isAnswered = isSoalTerjawab(soal.id);
             const isCurrent = index === currentSoalIndex;
-            
+
             return (
               <Tooltip title={`Soal ${index + 1} - ${isAnswered ? 'Terjawab' : 'Belum Dijawab'}`} key={index}>
                 <SoftBox
@@ -554,17 +555,17 @@ const Ujian = () => {
                 >
                   {index + 1}
                   {isAnswered && (
-                    <CheckCircleIcon 
-                      sx={{ 
-                        position: "absolute", 
-                        top: -2, 
-                        right: -2, 
-                        fontSize: 16, 
+                    <CheckCircleIcon
+                      sx={{
+                        position: "absolute",
+                        top: -2,
+                        right: -2,
+                        fontSize: 16,
                         color: "#fff",
                         backgroundColor: "#4caf50",
                         borderRadius: "50%",
                         border: "2px solid white"
-                      }} 
+                      }}
                     />
                   )}
                 </SoftBox>
@@ -630,7 +631,7 @@ const Ujian = () => {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      
+
       {/* Overlay untuk pelanggaran */}
       {isProtected && (
         <SoftBox
@@ -695,25 +696,25 @@ const Ujian = () => {
               <Card sx={{ borderRadius: "12px", boxShadow: "0 4px 20px rgba(0,0,0,0.08)" }}>
                 <SoftBox p={{ xs: 2, sm: 3 }}>
                   {/* Header Soal & Timer */}
-                  <SoftBox 
-                    display="flex" 
+                  <SoftBox
+                    display="flex"
                     flexDirection={{ xs: "column", sm: "row" }}
-                    justifyContent="space-between" 
-                    alignItems={{ xs: "flex-start", sm: "center" }} 
+                    justifyContent="space-between"
+                    alignItems={{ xs: "flex-start", sm: "center" }}
                     mb={3}
                     gap={2}
                   >
                     <SoftBox display="flex" alignItems="center" gap={1}>
-                      <SoftBadge 
-                        color="info" 
+                      <SoftBadge
+                        color="info"
                         badgeContent={`Soal ${currentSoalIndex + 1}`}
                         variant="gradient"
                         size={isMobile ? "md" : "lg"}
                         container
                       />
                       {isCurrentSoalTerjawab && (
-                        <SoftBadge 
-                          color="success" 
+                        <SoftBadge
+                          color="success"
                           badgeContent="Terjawab"
                           variant="gradient"
                           size="sm"
@@ -724,12 +725,12 @@ const Ujian = () => {
                         </SoftBadge>
                       )}
                     </SoftBox>
-                    
+
                     <SoftBox display="flex" alignItems="center">
                       <Timer sx={{ color: "#cb0c9f", mr: 1, fontSize: { xs: 20, sm: 24 } }} />
-                      <SoftTypography 
-                        variant={isMobile ? "h6" : "h5"} 
-                        fontWeight="bold" 
+                      <SoftTypography
+                        variant={isMobile ? "h6" : "h5"}
+                        fontWeight="bold"
                         color="info"
                       >
                         {timeLeft !== null ? formatTime(timeLeft) : "Loading..."}
@@ -739,15 +740,15 @@ const Ujian = () => {
 
                   {/* Teks Soal */}
                   {currentSoal.teks_soal && (
-                    <SoftBox 
+                    <SoftBox
                       mb={3}
                       sx={{
                         "& p": { fontSize: { xs: "0.9rem", sm: "1rem" }, lineHeight: 1.6 },
                         "& br": { display: "block", margin: "0.5rem 0" },
                       }}
                     >
-                      <SoftTypography 
-                        variant="body1" 
+                      <SoftTypography
+                        variant="body1"
                         dangerouslySetInnerHTML={{ __html: processedTeksSoal }}
                       />
                     </SoftBox>
@@ -760,8 +761,8 @@ const Ujian = () => {
                         component="img"
                         src={`${BASE_URL_NO_API}/${currentSoal.gambar_soal}`}
                         alt="gambar soal"
-                        sx={{ 
-                          maxWidth: "100%", 
+                        sx={{
+                          maxWidth: "100%",
                           maxHeight: { xs: "200px", sm: "300px" },
                           borderRadius: "8px",
                           boxShadow: "0 4px 12px rgba(0,0,0,0.1)"
@@ -775,7 +776,7 @@ const Ujian = () => {
                     <SoftBox>
                       {processedPilihanJawaban.map((pilihan, index) => {
                         const isSelected = jawabanTerpilih === pilihan.id;
-                        
+
                         return (
                           <SoftButton
                             key={index}
@@ -785,9 +786,9 @@ const Ujian = () => {
                             onClick={() => {
                               handlePilihJawaban(currentSoal.id, pilihan.id);
                               // Otomatis lanjut ke soal berikutnya setelah memilih
-                              setTimeout(() => {
-                                handleNextSoal(currentSoal.id, pilihan.id);
-                              }, 300);
+                              // setTimeout(() => {
+                              //   handleNextSoal(currentSoal.id, pilihan.id);
+                              // }, 300);
                             }}
                             sx={{
                               mb: 2,
@@ -819,12 +820,12 @@ const Ujian = () => {
                                 <span dangerouslySetInnerHTML={{ __html: pilihan.teks_pilihan }} />
                               </SoftBox>
                               {isSelected && (
-                                <CheckCircleIcon 
-                                  sx={{ 
-                                    color: "#4caf50", 
+                                <CheckCircleIcon
+                                  sx={{
+                                    color: "#4caf50",
                                     ml: 1,
                                     fontSize: 20
-                                  }} 
+                                  }}
                                 />
                               )}
                             </SoftBox>
@@ -841,7 +842,7 @@ const Ujian = () => {
                           size={isMobile ? "medium" : "large"}
                           onClick={() => finishTestSession(currentSoal.id, jawabanTerpilih)}
                           disabled={!isCurrentSoalTerjawab}
-                          sx={{ 
+                          sx={{
                             mt: 3,
                             opacity: isCurrentSoalTerjawab ? 1 : 0.6,
                           }}
