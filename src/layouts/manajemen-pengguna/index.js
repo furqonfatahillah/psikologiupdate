@@ -197,7 +197,6 @@ const ManajemenPengguna = () => {
   const [loadingData, setLoadingData] = useState(false);
 
   
-  const userColumns = useMemo(() => getUserColumns(), []);
 
   const role = sessionStorage.getItem("role");
 
@@ -628,6 +627,9 @@ const ManajemenPengguna = () => {
       { name: "aksi", align: "center", width: "5%" },
     ];
   };
+
+    const userColumns = useMemo(() => getUserColumns(), []);
+
 
   const getUserRows = () => {
     return userData.map((item, index) => ({
