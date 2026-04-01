@@ -52,9 +52,9 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 
 import BASE_URL from "../../../config/BASE_URL";
 import BASE_URL_NO_API from "../../../config/BASE_URL_NOT_API";
-const [isSubmitting, setIsSubmitting] = useState(false);
 
 const Ujian = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isProtected, setIsProtected] = useState(false);
   const [violationCount, setViolationCount] = useState(0);
   const [hasLoggedOut, setHasLoggedOut] = useState(false);
