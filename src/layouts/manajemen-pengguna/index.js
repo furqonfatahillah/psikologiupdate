@@ -196,7 +196,7 @@ const ManajemenPengguna = () => {
   const [loading, setLoading] = useState(false);
   const [loadingData, setLoadingData] = useState(false);
 
-  const userRows = useMemo(() => getUserRows(), [userData]);
+  
   const userColumns = useMemo(() => getUserColumns(), []);
 
   const role = sessionStorage.getItem("role");
@@ -647,6 +647,8 @@ const ManajemenPengguna = () => {
       ),
     }));
   };
+
+  const userRows = useMemo(() => getUserRows(), [userData]);
 
   // Admin table columns
   const getAdminColumns = () => {
