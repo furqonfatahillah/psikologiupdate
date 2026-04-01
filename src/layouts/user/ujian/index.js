@@ -785,6 +785,7 @@ const Ujian = () => {
                             fullWidth
                             onClick={() => {
                               handlePilihJawaban(currentSoal.id, pilihan.id);
+                              handleNextSoal(currentSoal.id, pilihan.id);
                               // Otomatis lanjut ke soal berikutnya setelah memilih
                               // setTimeout(() => {
                               //   handleNextSoal(currentSoal.id, pilihan.id);
