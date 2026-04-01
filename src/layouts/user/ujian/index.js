@@ -441,15 +441,16 @@ const Ujian = () => {
   }
   };
 
-  const finishTestSession = async (
-    soalId = null,
-    pilihanJawabanId = null,
-    teksJawaban = null
-  ) => {
+  const finishTestSession = async () => {
+  // const finishTestSession = async (
+  //   soalId = null,
+  //   pilihanJawabanId = null,
+  //   teksJawaban = null
+  // ) => {
 
-    if (soalId) {
-      await submitJawaban(soalId, pilihanJawabanId, teksJawaban);
-    }
+    // if (soalId) {
+    //   await submitJawaban(soalId, pilihanJawabanId, teksJawaban);
+    // }
 
     try {
       await axios.put(

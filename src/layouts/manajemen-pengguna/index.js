@@ -196,6 +196,9 @@ const ManajemenPengguna = () => {
   const [loading, setLoading] = useState(false);
   const [loadingData, setLoadingData] = useState(false);
 
+  const userRows = useMemo(() => getUserRows(), [userData]);
+  const userColumns = useMemo(() => getUserColumns(), []);
+
   const role = sessionStorage.getItem("role");
 
   const handleTabChange = (event, newValue) => {
@@ -550,13 +553,13 @@ const ManajemenPengguna = () => {
         `${BASE_URL}/admins/${adminToUpdate.id}`,
         payload,
         {
-          headers: { 
+          headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json"
           },
         }
       );
-      
+
       if (response.data.status === "success") {
         Swal.fire("Berhasil!", "Admin berhasil diperbarui.", "success");
         setOpenUpdateAdminModal(false);
@@ -571,16 +574,16 @@ const ManajemenPengguna = () => {
       }
     } catch (error) {
       console.error("Error updating admin:", error);
-      
+
       // Tangani error dengan lebih baik
       let errorMessage = "Gagal memperbarui admin.";
-      
+
       if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
-        
+
         // Jika error terkait username sudah digunakan
-        if (errorMessage.toLowerCase().includes("username sudah digunakan") || 
-            errorMessage.toLowerCase().includes("already exists")) {
+        if (errorMessage.toLowerCase().includes("username sudah digunakan") ||
+          errorMessage.toLowerCase().includes("already exists")) {
           errorMessage = "Username sudah digunakan. Silakan pilih username lain.";
         }
         // Jika error terkait validasi Prisma
@@ -588,7 +591,7 @@ const ManajemenPengguna = () => {
           errorMessage = "Terjadi kesalahan validasi data. Silakan coba lagi atau hubungi administrator.";
         }
       }
-      
+
       Swal.fire("Gagal!", errorMessage, "error");
     } finally {
       setLoading(false);
@@ -734,7 +737,7 @@ const ManajemenPengguna = () => {
                     <CircularProgress size={40} sx={{ color: "#cb0c9f" }} />
                   </SoftBox>
                 ) : (
-                  <Table columns={getUserColumns()} rows={getUserRows()} />
+                  <Table columns={userColumns} rows={userRows} />
                 )}
 
                 {/* Modal Tambah User */}
