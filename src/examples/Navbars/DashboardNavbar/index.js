@@ -65,6 +65,8 @@ function DashboardNavbar({ absolute, light, isMini }) {
   const [openMenu, setOpenMenu] = useState(false);
   const route = useLocation().pathname.split("/").slice(1);
 
+  const role = sessionStorage.getItem("role");
+
   useEffect(() => {
     // Setting the navbar type
     if (fixedNavbar) {
@@ -147,16 +149,17 @@ function DashboardNavbar({ absolute, light, isMini }) {
         </SoftBox>
         {isMini ? null : (
           <SoftBox sx={(theme) => navbarRow(theme, { isMini })}>
-            <IconButton
+            {role != "USER" && (
+              <IconButton
                 size="small"
                 color="inherit"
-                sx={navbarMobileMenu}
                 onClick={handleMiniSidenav}
               >
-                <Icon className={light ? "text-white" : "text-dark"}>
+                <Icon>
                   {miniSidenav ? "menu_open" : "menu"}
                 </Icon>
               </IconButton>
+            )}
             {/* <SoftBox pr={1}>
               <SoftInput
                 placeholder="Type here..."
