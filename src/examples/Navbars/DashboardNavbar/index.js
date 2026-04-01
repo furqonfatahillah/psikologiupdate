@@ -32,6 +32,7 @@ import Icon from "@mui/material/Icon";
 import SoftBox from "components/SoftBox";
 import SoftTypography from "components/SoftTypography";
 import SoftInput from "components/SoftInput";
+import SoftButton from "components/SoftButton";
 
 // Soft UI Dashboard React examples
 import Breadcrumbs from "examples/Breadcrumbs";
